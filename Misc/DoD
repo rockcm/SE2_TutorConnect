@@ -1,0 +1,7 @@
+Definition of Done: 
+
+The development team has decided that any task will be 'done' when:
+
+1. The task meets the PO's written acceptance criteria, fully and completely. 
+2. The task has been peer reviewed by at least one other developer. 
+3. The task has undergone any neccessary automated tests. 
