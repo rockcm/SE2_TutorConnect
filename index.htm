@@ -1,35 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TutorConnect - Login</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <!-- Header Image (Tutor Helping a Student) Not added yet  -->
-      
-        <h1>Welcome to TutorConnect</h1>
-        <p>Find the best tutors for your learning needs.</p>
-
-        <div class="login-box">
-            <!-- images will be replaced with local images eventually  -->
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"  
-                 alt="TutorConnect Logo" class="login-logo">
-            
-            <h2>Login</h2>
-            <form id="loginForm">
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter your email" required>
-
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
-
-                <button type="submit">Login</button>
-            </form>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>TutorConnect - Welcome</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"  
+                        alt="TutorConnect Logo" class="login-logo">
+        <div class="container">
+            <!-- Hero Section -->
+            <header class="hero">
+                <h1>Find the Perfect Tutor for You</h1>
+                <p>📚 Connect with experienced tutors and schedule sessions effortlessly.</p>
+                <a href="#login" class="btn">Get Started</a>
+            </header>
+    
+            <!-- Key Features Section -->
+            <section class="features">
+                <h2>Why Choose TutorConnect?</h2>
+                <ul>
+                    <li>✅ <strong>Smart Tutor Matching</strong> – Find the right tutor based on subject, price, and availability.</li>
+                    <li>✅ <strong>Easy Booking</strong> – Schedule tutoring sessions in just a few clicks.</li>
+                    <li>✅ <strong>Secure Payments</strong> – Pay safely with Stripe or PayPal.</li>
+                    <li>✅ <strong>In-App Chat</strong> – Communicate with your tutor before sessions.</li>
+                    <li>✅ <strong>Calendar & Zoom Integration</strong> – Never miss a session with built-in scheduling.</li>
+                </ul>
+            </section>
+    
+            <!-- How It Works Section -->
+            <section class="how-it-works">
+                <h2>How It Works</h2>
+                <ol>
+                    <li>🔹 <strong>Sign Up</strong> – Create your free account in seconds.</li>
+                    <li>🔹 <strong>Find a Tutor</strong> – Use filters to discover the best tutor for you.</li>
+                    <li>🔹 <strong>Book a Session</strong> – Choose a time that works and confirm your booking.</li>
+                    <li>🔹 <strong>Start Learning!</strong> – Connect with your tutor and level up your skills.</li>
+                </ol>
+            </section>
+    
+            <!-- Testimonials Section -->
+            <section class="testimonials">
+                <h2>What Our Users Say</h2>
+                <blockquote>"TutorConnect helped me boost my grades in just a few weeks!" – Samantha J.</blockquote>
+                <blockquote>"I found great students and love teaching here!" – James P.</blockquote>
+            </section>
+    
+            <!-- Login Section -->
+            <section id="login">
+                <div class="login-box">
+                    <h2>Login</h2>
+                    <form id="loginForm">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+    
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+    
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            </section>
         </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+    
+        <script src="script.js"></script>
+    </body>
 </html>
+        
+   
