@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize FastAPI app
-app = FastAPI(title="FastAPI Starter", description="A basic FastAPI setup", version="1.0")
+app = FastAPI()
 
 # CORS Middleware (Allows frontend to communicate with the API)
 app.add_middleware(
