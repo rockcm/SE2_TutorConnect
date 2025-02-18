@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary  # For PostgreSQL connections
+passlib[bcrypt]  # For password hashing
+python-jose[cryptography]  # For JWT token handling
+python-multipart  # Required for OAuth2 login
+pydantic
+email-validator  # Helps validate email addresses in Pydantic models
+
+# run this in your terminal: 
+# pip freeze > requirements.txt
