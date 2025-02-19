@@ -1,71 +1,263 @@
+/* ====== Global Styles and Reset ====== */
+/* Reset default browser padding and margins for all elements */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base styling for the body element */
 body {
-    font-family: Arial, sans-serif;
-    background-size: cover;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: #333;
 }
 
-.header-img {
-    max-width: 400px;
-    height: 400px;
- 
-   
-}
-
-
-/* Container Styling */
+/* A utility container to constrain content width and add padding */
 .container {
-    text-align: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
 }
 
-/* Login Box */
-.login-box {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    margin: 20px auto;
+/* ====== HEADER STYLES ====== */
+.site-header {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
 }
 
-/* Small Logo inside Login Box */
-.login-logo {
-    width: 50px;
-    margin-bottom: 10px;
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-h1 {
-    color: #333;
+.logo {
+  width: 50px; /* Adjust logo size */
 }
 
-p {
-    color: #666;
+/* Navigation styling */
+.main-nav ul {
+  list-style: none;
+  display: flex;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.main-nav li {
+  margin-left: 20px;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
-    background: #007bff;
-    border: none;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
+.main-nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.3s;
 }
 
-button:hover {
-    background: #0056b3;
+.main-nav a:hover {
+  color: #007BFF;
+}
+
+/* ====== TOP LOGIN SECTION STYLES ====== */
+.top-login {
+  padding: 15px 0;
+  background-color: #f5f5f5; /* Light background for contrast */
+}
+
+.top-login .login-box {
+  max-width: 300px;  /* A compact width for the login box */
+  margin: auto;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling the inputs inside the login box */
+.top-login input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* ====== HERO SECTION STYLES ====== */
+.hero {
+  background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradient background */
+  color: #fff;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+/* Button styling with hover effects */
+.btn {
+  background-color: #fff;
+  color: #2575fc;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn:hover {
+  background-color: #2575fc;
+  color: #fff;
+}
+
+/* ====== FEATURES SECTION STYLES ====== */
+.features {
+  background-color: #f9f9f9;
+  padding: 60px 20px;
+}
+
+.features h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+}
+
+/* Features list as flexible cards */
+.features ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.features li {
+  background: #fff;
+  padding: 20px;
+  margin: 10px;
+  flex: 1 1 250px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: flex-start;
+}
+
+.features li .icon {
+  font-size: 2rem;
+  margin-right: 15px;
+}
+
+/* ====== HOW IT WORKS SECTION STYLES ====== */
+.how-it-works {
+  padding: 60px 20px;
+}
+
+.how-it-works h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+}
+
+/* Removing default list styling and resetting counter */
+.how-it-works ol {
+  list-style: none;
+  counter-reset: step;
+}
+
+.how-it-works li {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+/* Styling the step number as a circle */
+.how-it-works li .step-number {
+  background-color: #2575fc;
+  color: #fff;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+/* ====== TESTIMONIALS SECTION STYLES ====== */
+.testimonials {
+  background-color: #f9f9f9;
+  padding: 60px 20px;
+}
+
+.testimonials h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+}
+
+/* Layout for testimonial cards */
+.testimonial-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.testimonial-cards .card {
+  background: #fff;
+  padding: 20px;
+  margin: 10px;
+  flex: 1 1 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-cards blockquote {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.testimonial-cards .user {
+  text-align: right;
+  font-weight: bold;
+}
+
+/* ====== FOOTER STYLES ====== */
+.site-footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* ====== RESPONSIVE STYLES ====== */
+@media (max-width: 768px) {
+  /* Stack features cards vertically on smaller screens */
+  .features ul {
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Stack testimonial cards vertically */
+  .testimonial-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Stack navigation items vertically */
+  .main-nav ul {
+    flex-direction: column;
+  }
+  .main-nav li {
+    margin: 10px 0;
+  }
 }
