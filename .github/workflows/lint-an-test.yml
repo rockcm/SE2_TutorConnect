@@ -3,10 +3,25 @@ name: Lint, Format, and Test
 on:
   push:
     branches:
-      - Sprint2_Adam
+     - Sprint2_Adam
+    paths:
+      - '**.py'          # Trigger if any Python file changes
+      - '**.js'          # Trigger if any JavaScript file changes
+      - '**.sql'         # Trigger if any SQL file changes
+      - 'requirements.txt'  # Trigger if dependencies change
+      - 'package.json'   # Trigger if JS dependencies change
+      - '.github/workflows/**'  # Trigger if the workflow file itself changes
+
   pull_request:
     branches:
       - Sprint2_Adam
+    paths:
+      - '**.py'
+      - '**.js'
+      - '**.sql'
+      - 'requirements.txt'
+      - 'package.json'
+      - '.github/workflows/**'
 
 jobs:
   lint-format-test:
@@ -28,10 +43,26 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Generate requirements.txt
+        if: matrix.language == 'python'
+        run: |
+          pip freeze > requirements.txt
+          echo "Generated requirements.txt:"
+          cat requirements.txt
+
+      - name: Commit and Push requirements.txt
+        if: matrix.language == 'python'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add requirements.txt
+          git commit -m "Auto-generate requirements.txt" || echo "No changes to commit"
+          git push origin Sprint2_Adam || echo "No changes to push"
+
       - name: Install Python Dependencies
         if: matrix.language == 'python'
         run: |
-          pip install flake8 black pytest
+          pip install -r requirements.txt
 
       - name: Run Python Linter
         if: matrix.language == 'python'
@@ -98,4 +129,4 @@ jobs:
           git add .
           git commit -m "Auto-format & lint fixes by GitHub Actions" || echo "No changes to commit"
           git push origin Sprint2_Adam || echo "No changes to push"
-
+ 
