@@ -49,6 +49,16 @@ jobs:
           pip freeze > requirements.txt
           echo "Generated requirements.txt:"
           cat requirements.txt
+      
+      - name: Install Python Dependencies
+        if: matrix.language == 'python'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt flake8 black pytest
+
+      - name: Run Python Linter (Flake8)
+        if: matrix.language == 'python'
+        run: flake8 --max-line-length=100 .
 
       - name: Commit and Push requirements.txt
         if: matrix.language == 'python'
