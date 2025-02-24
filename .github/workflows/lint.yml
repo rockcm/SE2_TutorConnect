@@ -1,0 +1,60 @@
+name: Lint Code
+
+on:
+  puh:
+    branches:
+      - Sprint2_Adam
+  pull_request:
+    branches:
+      - Sprint2_Adam
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [python, javascript, sql]
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Python Linting (flake8)
+      - name: Set up Python
+        if: matrix.language == 'python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Python Linters
+        if: matrix.language == 'python'
+        run: pip install flake8
+
+      - name: Run Python Linter
+        if: matrix.language == 'python'
+        run: flake8 --max-line-length=100 .
+
+      # JavaScript Linting (ESLint)
+      - name: Set up Node.js
+        if: matrix.language == 'javascript'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install JavaScript Linters
+        if: matrix.language == 'javascript'
+        run: npm install -g eslint
+
+      - name: Run JavaScript Linter
+        if: matrix.language == 'javascript'
+        run: eslint . --ext .js,.jsx,.ts,.tsx
+
+      # SQL Linting (sqlfluff)
+      - name: Install SQL Linter
+        if: matrix.language == 'sql'
+        run: pip install sqlfluff
+
+      - name: Run SQL Linter
+        if: matrix.language == 'sql'
+        run: sqlfluff lint --dialect postgres .
+s
