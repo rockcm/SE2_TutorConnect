@@ -57,4 +57,4 @@ jobs:
       - name: Run SQL Linter
         if: matrix.language == 'sql'
         run: sqlfluff lint --dialect postgres .
-s
+
