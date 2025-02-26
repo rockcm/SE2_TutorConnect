@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wireframe Example</title>
+  <style>
+    /* Reset some default browser padding/margins */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center; /* Center all inline/block elements by default */
+      margin: 20px;
+    }
+
+    /* Top navigation / header */
+    header {
+      margin-bottom: 20px;
+    }
+    .top-nav {
+      display: inline-block; /* So it can be centered */
+    }
+    .top-nav .logo {
+      font-weight: bold;
+      margin-right: 40px;
+    }
+    .top-nav a {
+      text-decoration: none;
+      margin: 0 10px;
+      color: #000;
+    }
+
+    /* Banner placeholder */
+    .banner {
+      width: 80%;
+      height: 200px;
+      margin: 0 auto 20px;
+      border: 2px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    /* Section headings */
+    h2 {
+      margin: 20px 0 10px;
+    }
+
+    /* Intro / Mission text blocks */
+    .intro, .mission {
+      width: 60%;
+      margin: 0 auto 20px;
+      text-align: center; /* Additional safety to ensure center text */
+    }
+
+    /* Promo images row */
+    .promo-section {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .promo-img {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    /* Our Team section */
+    .team-table {
+      margin: 0 auto 40px; /* Center the table and add bottom spacing */
+      border-collapse: collapse;
+    }
+    .team-table td {
+      width: 200px;
+      height: 150px;
+      border: 1px solid #000;
+      vertical-align: top;
+      padding: 10px;
+    }
+    .team-img {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #000;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .team-info p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <div class="top-nav">
+      <span class="logo">App Name &amp; Logo</span>
+      <a href="#">Page1</a>
+      <a href="#">Page2</a>
+      <a href="#">Page3</a>
+      <a href="#">Page4</a>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <div class="banner">
+    Banner
+  </div>
+
+  <!-- Our Story -->
+  <h2>Our Story</h2>
+  <div class="intro">
+    <p>At Tutor Connect we believe that everyone should have an equal opportunity.</p>
+  </div>
+
+  <!-- Our Mission Statement -->
+  <h2>Our Mission Statement</h2>
+  <div class="mission">
+    <p>Ensuring that everyone has a chance to learn and teach.</p>
+  </div>
+
+  <!-- Promo Images -->
+  <div class="promo-section">
+    <div class="promo-img">Promo Img</div>
+    <div class="promo-img">Promo Img</div>
+    <div class="promo-img">Promo Img</div>
+  </div>
+
+  <!-- Our Team -->
+  <h2>Our Team</h2>
+  <table class="team-table">
+    <!-- Row 1 -->
+    <tr>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Row 2 -->
+    <tr>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Row 3 -->
+    <tr>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+    </tr>
+    <!-- Row 4 -->
+    <tr>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+      <td>
+        <div class="team-img">Img</div>
+        <div class="team-info">
+          <p>Name</p>
+          <p>Role</p>
+          <p>Email</p>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
