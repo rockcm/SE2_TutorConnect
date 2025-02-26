@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutorConnect - Profile</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="site-header">
+        <div class="container">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="TutorConnect Logo" class="logo">
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                    <li><a href="#" id="logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== PROFILE SECTION ==================== -->
+    <section class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Avatar" class="avatar">
+                <h2 id="user-name">John Doe</h2>
+                <p>@johndoe</p>
+            </div>
+            <div class="profile-details">
+                <p><strong>Email:</strong> johndoe@example.com</p>
+                <p><strong>Phone:</strong> +123 456 7890</p>
+                <p><strong>Location:</strong> New York, USA</p>
+                <p><strong>Languages:</strong> English, Spanish</p>
+                <p><strong>Role:</strong> <span id="user-role"></span></p>
+                <p><strong>Education:</strong> B.Sc. in Computer Science</p>
+            </div>
+            <button class="btn edit-btn">Edit Profile</button>
+        </div>
+
+        <!-- STUDENT & TUTOR SECTIONS CONTAINER -->
+        <div class="sections-container">
+            <!-- STUDENT SECTION -->
+            <div class="student-section" id="student-section">
+                <h3>Student Section</h3>
+                <label for="help-topic">Seeking Help With:</label>
+                <select id="help-topic">
+                    <option>Math</option>
+                    <option>Science</option>
+                    <option>History</option>
+                </select>
+                <label>Available On:</label>
+                <input type="date">
+                <label>At:</label>
+                <input type="time">
+                <label>Extra Accommodations?</label>
+                <input type="text" placeholder="Type here...">
+            </div>
+
+            <!-- TUTOR SECTION -->
+            <div class="tutor-section" id="tutor-section">
+                <h3>Tutor Section</h3>
+                <label>Services Offered:</label>
+                <textarea placeholder="Describe your tutoring services..."></textarea>
+                <label>Topics:</label>
+                <input type="checkbox"> Science
+                <input type="checkbox"> Math
+                <input type="checkbox"> Programming
+                <input type="checkbox"> History
+                <label>Available On:</label>
+                <input type="date">
+                <label>At:</label>
+                <input type="time">
+                <button class="btn save-btn">Save Changes</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 TutorConnect. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="profile.js"></script>
+</body>
+</html>
+
