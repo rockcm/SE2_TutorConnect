@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Wireframe Example</title>
   <style>
-    /* Reset some default browser padding/margins */
+    /* Reset default browser padding/margins */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -13,7 +13,7 @@
 
     body {
       font-family: Arial, sans-serif;
-      text-align: center; /* Center all inline/block elements by default */
+      text-align: center; /* Centers headings, paragraphs, etc. */
       margin: 20px;
     }
 
@@ -56,7 +56,7 @@
     .intro, .mission {
       width: 60%;
       margin: 0 auto 20px;
-      text-align: center; /* Additional safety to ensure center text */
+      text-align: center;
     }
 
     /* Promo images row */
@@ -84,28 +84,55 @@
       border-collapse: collapse;
     }
     .team-table td {
-      width: 200px;
-      height: 150px;
+      width: 400px;
+      height: 120px;
       border: 1px solid #000;
-      vertical-align: top;
+      vertical-align: middle;
       padding: 10px;
     }
+
+    /* Container for each team member inside the cell */
+    .team-member {
+      display: flex;
+      justify-content: center;  /* Center the group horizontally within the cell */
+      align-items: flex-start;  /* Align items at the top if they differ in height */
+      gap: 20px;                /* Space between image, info, and bio */
+      margin: 0 auto;
+    }
+
+    /* Image placeholder */
     .team-img {
       width: 60px;
       height: 60px;
       border: 2px solid #000;
       border-radius: 50%;
-      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
       font-weight: bold;
+      flex-shrink: 0; /* Prevent the image from shrinking if space is tight */
+    }
+
+    /* Name, Role, Email block */
+    .team-info {
+      text-align: left; /* Keep text left-aligned within this block */
     }
     .team-info p {
-      margin: 5px 0;
+      margin: 3px 0;
+    }
+
+    /* Bio block */
+    .team-bio {
+      text-align: left; /* Keep bio text left-aligned as well */
+      max-width: 120px; /* You can adjust this to control wrapping */
+    }
+    .team-bio p {
+      margin: 3px 0;
     }
   </style>
+  <!--####################################################################################################################-->
+  <!--#################### Css Above ##############################-->
+  <!--####################################################################################################################-->
 </head>
 <body>
 
@@ -128,7 +155,7 @@
   <!-- Our Story -->
   <h2>Our Story</h2>
   <div class="intro">
-    <p>At Tutor Connect we believe that everyone should have an equal opportunity.</p>
+    <p>At Tutor Connect, we believe that everyone should have an equal opportunity.</p>
   </div>
 
   <!-- Our Mission Statement -->
@@ -150,76 +177,116 @@
     <!-- Row 1 -->
     <tr>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
     </tr>
     <!-- Row 2 -->
     <tr>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
     </tr>
     <!-- Row 3 -->
     <tr>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
     </tr>
     <!-- Row 4 -->
     <tr>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
       <td>
-        <div class="team-img">Img</div>
-        <div class="team-info">
-          <p>Name</p>
-          <p>Role</p>
-          <p>Email</p>
+        <div class="team-member">
+          <div class="team-img">Img</div>
+          <div class="team-info">
+            <p>Name</p>
+            <p>Role</p>
+            <p>Email</p>
+          </div>
+          <div class="team-bio">
+            <p>Bio</p>
+          </div>
         </div>
       </td>
     </tr>
