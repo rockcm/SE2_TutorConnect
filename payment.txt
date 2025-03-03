@@ -1,0 +1,9 @@
+Successful Payment
+Card Nmber: 4242 4242 4242 4242
+Expiry: Any future date (e.g., 12/34)
+CVC: Any 3-digit code (e.g., 123)
+ZIP: Any valid ZIP code
+Declined Payment
+Card Number: 4000 0000 0000 0002 (declined card)
+3D Secure Authentication
+Card Number: 4000 0025 0000 3155 (prompts authentication) 
