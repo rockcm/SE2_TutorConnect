@@ -2,8 +2,17 @@ from fastapi import FastAPI, HTTPException
 import sqlite3
 from fastapi.responses import HTMLResponse
 from typing import List, Dict
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins (change this in production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 db_path = "TutorConnect.db"  # Path to the SQLite database
 

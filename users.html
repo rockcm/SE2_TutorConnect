@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutorConnect Users</title>
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>User List</h1>
+    <button hx-get="http://localhost:8000/users" hx-trigger="click" hx-target="#user-table">
+        Load Users
+    </button>
+    <div id="user-table">
+        <!-- Users will be loaded here -->
+    </div>
+</body>
+</html>
