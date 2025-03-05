@@ -321,3 +321,22 @@ button {
 button:hover {
   background: #1a5cd6;
 }
+
+.radio-account-type {
+  display: flex;
+  gap: 50px; /* Space between options */
+  align-items: center; /* Ensures vertical alignment */
+  justify-content: center; /* Centers the radio buttons horizontally */
+}
+
+.radio-account-type label {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Small spacing between radio button and text */
+  cursor: pointer;
+}
+
+.radio-account-type input[type="radio"] {
+  margin: 10;
+  vertical-align: middle;
+}

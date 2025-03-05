@@ -5,6 +5,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Literal  # Restrict role values
 from auth_utils import get_current_user, create_access_token, verify_password, hash_password
 from database import SessionLocal, User  # Import User model and database session
+import register  # Import register API from register.py
 
 # Authentication changes:
 # - Implemented authentication with JWT tokens.
@@ -14,6 +15,9 @@ from database import SessionLocal, User  # Import User model and database sessio
 # - JWT now stores user_id instead of email.
 
 app = FastAPI()
+
+# Include register routes from register.py
+app.include_router(register.router)
 
 # Dependency to get database session
 def get_db():
@@ -29,32 +33,6 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     role: Literal["student", "tutor"]  # ✅ Restricts roles to valid values
-
-@app.post("/register", status_code=201)
-def register_user(user: UserCreate, db: Session = Depends(get_db)):
-    """Registers a new user with hashed password and stores in database"""
-    
-    # Check if user already exists
-    existing_user = db.query(User).filter(User.email == user.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already exists")
-    
-    # Hash the password before storing
-    hashed_password = hash_password(user.password)
-
-    # Create a new user in the database
-    new_user = User(
-        name=user.name,
-        email=user.email,
-        hashed_password=hashed_password,
-        role=user.role
-    )
-
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    return {"message": "User registered successfully", "user_id": new_user.user_id}
 
 @app.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
