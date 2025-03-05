@@ -4,57 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Sign Up | TutorConnect</title>
-    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
-        .auth-container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
-        input, button { width: 100%; margin: 10px 0; padding: 10px; }
-        .hidden { display: none; }
-        .toggle-container { display: flex; justify-content: space-around; margin-bottom: 10px; }
-        .toggle-container button { flex: 1; padding: 10px; cursor: pointer; border: none; background-color: #f0f0f0; }
-        .toggle-container button.active { background-color: #007bff; color: white; }
-        .message { color: green; font-weight: bold; }
-        .error { color: red; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="auth-container">
         <h2 id="formTitle">Login</h2>
 
         <!-- Toggle Buttons -->
         <div class="toggle-container">
-            <button hx-on:click="toggleForm('login')" class="active" id="showLogin">Login</button>
-            <button hx-on:click="toggleForm('signup')" id="showSignup">Sign Up</button>
+            <button id="showLogin" class="active">Login</button>
+            <button id="showSignup">Sign Up</button>
         </div>
 
         <!-- Login Form -->
-        <form id="loginForm" hx-post="http://localhost:8000/login" hx-target="#responseMessage" hx-swap="innerHTML">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
 
         <!-- Signup Form (Initially Hidden) -->
-        <form id="signupForm" class="hidden" hx-post="http://localhost:8000/users/create" hx-target="#responseMessage" hx-swap="innerHTML">
-            <input type="text" name="name" placeholder="Full Name" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
+        <form id="signupForm" class="hidden">
+            <input type="text" id="signupName" placeholder="Full Name" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
             <button type="submit">Sign Up</button>
         </form>
-
-        <div id="responseMessage"></div>
     </div>
 
-    <script>
-        function toggleForm(formType) {
-            document.getElementById("formTitle").textContent = formType === "login" ? "Login" : "Sign Up";
-            document.getElementById("loginForm").classList.toggle("hidden", formType !== "login");
-            document.getElementById("signupForm").classList.toggle("hidden", formType !== "signup");
-            document.getElementById("showLogin").classList.toggle("active", formType === "login");
-            document.getElementById("showSignup").classList.toggle("active", formType === "signup");
-        }
-    </script>
-
+    <script src="login.js"></script>
 </body>
 </html>
