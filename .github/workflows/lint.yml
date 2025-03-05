@@ -1,7 +1,7 @@
 name: Lint Code
 
 on:
-  puh:
+  push:
     branches:
       - Sprint2_Adam
   pull_request:
