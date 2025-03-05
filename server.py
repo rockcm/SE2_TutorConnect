@@ -11,14 +11,21 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 # Serve the home page first
+
+
 @app.route("/")
 def home():
-    return render_template("index.html")  # Ensure index.html exists in the templates folder
+    # Ensure index.html exists in the templates folder
+    return render_template("index.html")
 
 # Serve the payment page
+
+
 @app.route("/payment")
 def payment():
-    return render_template("payment.html")  # Ensure payment.html exists in the templates folder
+    # Ensure payment.html exists in the templates folder
+    return render_template("payment.html")
+
 
 @app.route('/create-payment-intent', methods=['POST'])
 def create_payment():
@@ -37,6 +44,6 @@ def create_payment():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+
 if __name__ == "__main__":
     app.run(debug=True)
-
