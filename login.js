@@ -50,19 +50,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const name = document.getElementById("signupName").value;
       const email = document.getElementById("signupEmail").value;
       const password = document.getElementById("signupPassword").value;
+      const role = document.querySelector('input[name="accountType"]:checked').value;
 
-      const response = await fetch("http://localhost:8000/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password, role: "student" })
-      });
+        let userData = {
+            name: name,
+            email: email,
+            password: password,
+            role: role
+        };
 
-      const data = await response.json();
-      if (response.ok) {
-          alert("Registration successful! Please log in.");
-          window.location.href = "login.html";
-      } else {
-          alert(data.detail);
-      }
+        try {
+            let response = await fetch("http://127.0.0.1:8000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData)
+            });
+    
+            let result = await response.json();
+            if (response.ok) {
+                alert("Registration successful! Please log in.");
+                window.location.href = "login.html"; // Redirect to login page
+            } else {
+                alert("Error: " + result.detail);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Failed to register user.");
+        }
   });
 });
