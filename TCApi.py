@@ -52,6 +52,7 @@ def get_users():
 def get_users_json():
     """API endpoint to get all users as JSON. This is easier to write on the backend but would require more JavaScript on the frontend."""
     try:
+        
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row  # Return rows as dictionaries
         cursor = conn.cursor()
