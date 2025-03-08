@@ -152,3 +152,27 @@ def update_user(
     </table>
     """
     return HTMLResponse(content=html_content)
+
+@app.post("/users/delete", response_class=HTMLResponse)
+def delete_user(user_id: int = Form(...)):
+    """
+    API endpoint to delete a user based on their ID.
+    Accepts form data and returns an HTML snippet confirming deletion.
+    """
+    try:
+        # Connect to the SQLite database
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        # Execute the delete query
+        cursor.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
+        conn.commit()
+        # Check if a user was actually deleted
+        if cursor.rowcount == 0:
+            conn.close()
+            return "<p>User not found.</p>"
+        conn.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    # Return a confirmation message as HTML
+    return f"<p>User with ID {user_id} has been deleted successfully.</p>"

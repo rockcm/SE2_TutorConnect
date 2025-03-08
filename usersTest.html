@@ -61,5 +61,19 @@
     <div id="edit-result">
         <!-- Updated user details will be loaded here after edit -->
     </div>
+
+    <!-- Form to delete an existing user -->
+    <h2>Delete User</h2>
+    <form hx-post="http://localhost:8000/users/delete" hx-trigger="submit" hx-target="#delete-result" hx-swap="outerHTML">
+        <!-- Input for the user ID that should be deleted -->
+        <label for="delete_user_id">User ID:</label>
+        <input type="number" id="delete_user_id" name="user_id" required><br><br>
+        <button type="submit">Delete User</button>
+    </form>
+
+    <!-- Container where the result of the delete operation will be displayed -->
+    <div id="delete-result">
+        <!-- Deletion confirmation will be shown here -->
+    </div>
 </body>
 </html>
