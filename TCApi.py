@@ -18,13 +18,23 @@ app.add_middleware(
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
 @app.post("/users/create", response_class=HTMLResponse)
-def create_user(name: str = Form(...), email: str = Form(...)):
-    """API endpoint to create a new user via form data (for HTMX)."""
+def create_user(
+    name: str = Form(...),       # User's name
+    email: str = Form(...),      # User's email
+    password: str = Form(...)    # User's password (new parameter)
+):
+    """
+    API endpoint to create a new user via form data (for HTMX).
+    Now accepts a password as well.
+    """
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        # Insert a new user into the database
-        cursor.execute("INSERT INTO users (name, email) VALUES (?, ?)", (name, email))
+        # Insert a new user into the database, including the password field.
+        cursor.execute(
+            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+            (name, email, password)
+        )
         conn.commit()
         # Retrieve the ID of the newly created user
         user_id = cursor.lastrowid
@@ -32,7 +42,8 @@ def create_user(name: str = Form(...), email: str = Form(...)):
     except sqlite3.Error as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
     
-    # Return an HTML table displaying the new user
+    # Return an HTML table displaying the new user's ID, name, and email.
+    # Note: Password is kept hidden for security reasons.
     return f"""
     <table border="1">
         <thead>
@@ -49,8 +60,7 @@ def get_users():
     """API endpoint to get all users as an HTML table for HTMX frontend."""
     try:
         conn = sqlite3.connect(db_path)
-        # Set row_factory so that rows can be accessed as dictionaries
-        conn.row_factory = sqlite3.Row
+        conn.row_factory = sqlite3.Row  # Access rows as dictionaries
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users")
         users = cursor.fetchall()
@@ -61,7 +71,7 @@ def get_users():
     if not users:
         return "<p>No users found</p>"
     
-    # Build HTML table rows for each user record
+    # Build HTML table rows for each user record (excluding the password field)
     table_rows = "".join(
         f"<tr><td>{user['user_id']}</td><td>{user['name']}</td><td>{user['email']}</td></tr>" 
         for user in users
@@ -132,11 +142,10 @@ def update_user(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-    # If the user is not found, return a simple message
     if not user:
         return "<p>User not found</p>"
     
-    # Return an HTML table containing the updated user information
+    # Return an HTML table containing the updated user information (excluding the password)
     html_content = f"""
     <table border="1">
         <thead>
@@ -160,7 +169,6 @@ def delete_user(user_id: int = Form(...)):
     Accepts form data and returns an HTML snippet confirming deletion.
     """
     try:
-        # Connect to the SQLite database
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         # Execute the delete query
