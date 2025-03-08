@@ -17,12 +17,12 @@ app.add_middleware(
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
 @app.post("/users/create", response_class=HTMLResponse)
-def create_user(name: str = Form(...), email: str = Form(...), password: str = Form(...)):
+def create_user(name: str = Form(...), email: str = Form(...)):
     """API endpoint to create a new user via form data (for HTMX)."""
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", (name, email, password))
+        cursor.execute("INSERT INTO users (name, email) VALUES (?, ?)", (name, email))
         conn.commit()
         user_id = cursor.lastrowid
         conn.close()
@@ -39,6 +39,7 @@ def create_user(name: str = Form(...), email: str = Form(...), password: str = F
         </tbody>
     </table>
     """
+
 
 
 
