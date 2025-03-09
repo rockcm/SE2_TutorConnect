@@ -47,7 +47,7 @@ jobs:
 
       - name: Run JavaScript Linter
         if: matrix.language == 'javascript'
-        run: eslint . --ext .js,.jsx,.ts,.tsx
+        run: eslint.config.js
 
       # SQL Linting (sqlfluff)
       - name: Install SQL Linter
