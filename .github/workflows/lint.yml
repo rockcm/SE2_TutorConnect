@@ -19,20 +19,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Python Linting (flake8)
       - name: Set up Python
-        if: matrix.language == 'python'
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.9'
 
-      - name: Install Python Linters
-        if: matrix.language == 'python'
-        run: pip install flake8
+      - name: Install dependencies
+        run: |
+          pip install black flake8
 
-      - name: Run Python Linter
-        if: matrix.language == 'python'
-        run: flake8 --max-line-length=100 .
+      - name: Run black (Auto-format)
+        run:           
+          black --line-length=100 .
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Auto-format code with black" || echo "No changes to commit"
+          git push
+
+      - name: Run flake8 (Lint)
+        run: flake8 --max-line-length=100
 
       # JavaScript Linting (ESLint)
       - name: Set up Node.js
