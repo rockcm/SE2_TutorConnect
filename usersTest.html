@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TutorConnect Users</title>
+    <!-- Import HTMX for handling dynamic requests -->
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
     <style>
+        /* Basic styling for the page */
         body { font-family: Arial, sans-serif; margin: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid black; padding: 10px; text-align: left; }
@@ -15,14 +17,17 @@
 <body>
     <h1>User List</h1>
 
+    <!-- Button to load the users table by making an HTMX GET request to the /users endpoint -->
     <button hx-get="http://localhost:8000/users" hx-trigger="click" hx-target="#user-table">
         Load Users
     </button>
 
+    <!-- Container where the users table will be loaded -->
     <div id="user-table">
         <!-- Users will be loaded here -->
     </div>
 
+    <!-- Form to create a new user -->
     <h2>Add User</h2>
     <form hx-post="http://localhost:8000/users/create" hx-trigger="submit" hx-target="#user-table" hx-swap="outerHTML">
         <label for="name">Name:</label>
@@ -31,7 +36,44 @@
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required><br><br>
 
+        <!-- New password field -->
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
         <button type="submit">Create User</button>
     </form>
+
+    <!-- Form to edit an existing user -->
+    <h2>Edit User</h2>
+    <form hx-post="http://localhost:8000/users/update" hx-trigger="submit" hx-target="#edit-result" hx-swap="outerHTML">
+        <label for="edit_user_id">User ID:</label>
+        <input type="number" id="edit_user_id" name="user_id" required><br><br>
+
+        <label for="edit_name">Name:</label>
+        <input type="text" id="edit_name" name="name" required><br><br>
+
+        <label for="edit_email">Email:</label>
+        <input type="email" id="edit_email" name="email" required><br><br>
+
+        <button type="submit">Edit User</button>
+    </form>
+
+    <!-- Container where the result of the edit operation will be displayed -->
+    <div id="edit-result">
+        <!-- Updated user details will be loaded here after edit -->
+    </div>
+
+    <!-- Form to delete an existing user -->
+    <h2>Delete User</h2>
+    <form hx-post="http://localhost:8000/users/delete" hx-trigger="submit" hx-target="#delete-result" hx-swap="outerHTML">
+        <label for="delete_user_id">User ID:</label>
+        <input type="number" id="delete_user_id" name="user_id" required><br><br>
+        <button type="submit">Delete User</button>
+    </form>
+
+    <!-- Container where the result of the delete operation will be displayed -->
+    <div id="delete-result">
+        <!-- Deletion confirmation will be shown here -->
+    </div>
 </body>
 </html>
