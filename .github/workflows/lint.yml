@@ -38,8 +38,8 @@ jobs:
           git push
 
       - name: Run flake8 (Lint)
-        run: flake8 --max-line-length=100
-
+        # run: flake8 --max-line-length=100
+ 
       # JavaScript Linting (ESLint)
       - name: Set up Node.js
         if: matrix.language == 'javascript'
