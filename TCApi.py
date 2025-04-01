@@ -3,6 +3,9 @@ import sqlite3
 from fastapi.responses import HTMLResponse
 from typing import List, Dict
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
@@ -14,6 +17,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Configure Jinja2 templates
+templates = Jinja2Templates(directory="templates")
+
+# Route for the home page
+@app.get("/")
+def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+# Route for another page (e.g., about.html)
+@app.get("/about")
+def about_page(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
 
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
