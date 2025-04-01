@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorConnect - Welcome</title>
     <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
   </head>
   <body>
     <!-- ==================== HEADER ==================== -->
@@ -140,12 +141,14 @@
             </div>
           </li>
           <li>
-            <span class="icon">💳</span>
+            <span clas="icon">💳</span>
             <div>
-              <strong>Secure Payments</strong>
-              <p>Pay safely with Stripe or PayPal.</p>
-            </div>
-          </li>
+             <strong>Secure Payments</strong>
+             <p>Pay safely with <a href="{{ url_for('payment') }}" class="payment-link">Stripe</a> or PayPal.</p>
+	   </div>
+
+  	</li>
+
           <li>
             <span class="icon">💬</span>
             <div>
