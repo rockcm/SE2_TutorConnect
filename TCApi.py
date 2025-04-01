@@ -54,6 +54,11 @@ def profile_page(request: Request):
 def users_test_page(request: Request):
     return templates.TemplateResponse("usersTest.html", {"request": request})
 
+# Alternative route for users test page (without hyphen)
+@app.get("/usersTest")
+def users_test_page_alt(request: Request):
+    return templates.TemplateResponse("usersTest.html", {"request": request})
+
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
 @app.post("/users/create", response_class=HTMLResponse)
