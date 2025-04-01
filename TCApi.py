@@ -34,6 +34,21 @@ def read_root(request: Request):
 def about_page(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
+# Route for search page
+@app.get("/search")
+def search_page(request: Request):
+    return templates.TemplateResponse("search.html", {"request": request})
+
+# Route for login page
+@app.get("/login")
+def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+# Route for profile page
+@app.get("/profile")
+def profile_page(request: Request):
+    return templates.TemplateResponse("profile.html", {"request": request})
+
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
 @app.post("/users/create", response_class=HTMLResponse)
