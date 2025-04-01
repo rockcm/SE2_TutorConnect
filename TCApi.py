@@ -49,6 +49,11 @@ def login_page(request: Request):
 def profile_page(request: Request):
     return templates.TemplateResponse("profile.html", {"request": request})
 
+# Route for users test page
+@app.get("/users-test")
+def users_test_page(request: Request):
+    return templates.TemplateResponse("usersTest.html", {"request": request})
+
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
 @app.post("/users/create", response_class=HTMLResponse)
