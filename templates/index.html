@@ -6,89 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorConnect - Welcome</title>
     <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
     <!-- ==================== HEADER ==================== -->
     <header>
-      <style>
-        /* NAVBAR WRAPPER */
-        .navbar {
-          display: flex;
-          align-items: center;
-          background-color: #fc0000;
-          padding: 10px 20px;
-          border-bottom: 1px solid #ddd;
-          font-family: Arial, sans-serif;
-          height: 50px;
-          justify-content: space-between; /* Space out left, center, and right */
-        }
-    
-        /* LEFT SECTION: Page Links */
-        .nav-left a {
-          margin-right: 15px;
-          text-decoration: none;
-          color: #333;
-          font-weight: bold;
-          
-
-        }
-        .nav-left a:hover {
-          color: #007bff;
-        }
-    
-        /* CENTER SECTION: Search Bar */
-        .nav-search {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex: 1; /* Let the search bar expand in the center */
-        }
-        .nav-search input[type="text"] {
-          width: 200px;
-          padding: 5px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .search-btn {
-          margin-left: 5px;
-          padding: 5px;
-          border: none;
-          background-color: #ddd;
-          border-radius: 4px;
-          cursor: pointer;
-          width: 50px;
-        }
-        .search-btn:hover {
-          background-color: #ccc;
-        }
-    
-        /* RIGHT SECTION: Small Login/Create Button */
-        .nav-right {
-          margin-left: 20px; /* Some spacing from center */
-        }
-        .login-btn {
-          padding: 2px 6px; /* Smaller button size */
-          font-size: 0.8rem;
-          border: none;
-          background-color: #4CAF50;
-          color: #fff;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        .login-btn:hover {
-          background-color: #45a049;
-        }
-      </style>
     
       <nav class="navbar">
         <!-- LEFT: Page Links -->
         <div class="nav-left" style="vertical-align: middle;">
           <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
-          <a href="#hero">Home</a>
+          <a href="/">Home</a>
           <a href="#page2">Page2</a>
-          <a href="search.html">Search</a>
+          <a href="/search">Search</a>
           <a href="#page4">Page4</a>
         </div>
     
@@ -100,7 +30,7 @@
     
         <!-- RIGHT: Login Button on the Far Right -->
         <div class="nav-right">
-          <a href="login.html" class="login-btn">Login/Create</a>
+          <a href="/login" class="login-btn">Login/Create</a>
         </div>
       </nav>
     </header>
@@ -113,7 +43,7 @@
         <p>
           Connect with experienced tutors and schedule sessions effortlessly.
         </p>
-        <a href="login.html" class="btn">Get Started</a>
+        <a href="/login" class="btn">Get Started</a>
       </div>
     </section>
 
@@ -141,14 +71,12 @@
             </div>
           </li>
           <li>
-            <span clas="icon">💳</span>
+            <span class="icon">💳</span>
             <div>
-             <strong>Secure Payments</strong>
-             <p>Pay safely with <a href="{{ url_for('payment') }}" class="payment-link">Stripe</a> or PayPal.</p>
-	   </div>
-
-  	</li>
-
+              <strong>Secure Payments</strong>
+              <p>Pay safely with Stripe or PayPal.</p>
+            </div>
+          </li>
           <li>
             <span class="icon">💬</span>
             <div>
@@ -237,6 +165,6 @@
     </footer>
 
     <!-- External JavaScript file (if needed) -->
-    <script src="script.js"></script>
+    <script src="/static/script.js"></script>
   </body>
 </html>

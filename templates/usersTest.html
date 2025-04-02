@@ -17,6 +17,27 @@
 <body>
     <h1>User List</h1>
 
+    <!-- Search functionality -->
+    <h2>Search Users</h2>
+    <div>
+        <label for="search">Search by name or email:</label>
+        <input 
+            type="text" 
+            id="search" 
+            name="search_term" 
+            placeholder="Start typing to search..." 
+            hx-get="http://localhost:8000/users/search" 
+            hx-trigger="keyup changed delay:300ms" 
+            hx-target="#search-results">
+    </div>
+    
+    <!-- Container for search results -->
+    <div id="search-results">
+        <!-- Search results will appear here -->
+    </div>
+    
+    <hr>
+
     <!-- Button to load the users table by making an HTMX GET request to the /users endpoint -->
     <button hx-get="http://localhost:8000/users" hx-trigger="click" hx-target="#user-table">
         Load Users
@@ -29,19 +50,24 @@
 
     <!-- Form to create a new user -->
     <h2>Add User</h2>
-    <form hx-post="http://localhost:8000/users/create" hx-trigger="submit" hx-target="#user-table" hx-swap="outerHTML">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+    <form 
+    hx-post="http://localhost:8000/users/create" 
+    hx-trigger="submit" 
+    hx-target="#user-table" 
+    hx-swap="outerHTML"
+    enctype="multipart/form-data"
+>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
 
-        <!-- New password field -->
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
 
-        <button type="submit">Create User</button>
-    </form>
+    <button type="submit">Create User</button>
+</form>
 
     <!-- Form to edit an existing user -->
     <h2>Edit User</h2>

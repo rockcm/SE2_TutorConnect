@@ -3,6 +3,9 @@ import sqlite3
 from fastapi.responses import HTMLResponse
 from typing import List, Dict
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
@@ -14,6 +17,47 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Configure Jinja2 templates
+templates = Jinja2Templates(directory="templates")
+
+# Route for the home page
+@app.get("/")
+def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+# Route for another page (e.g., about.html)
+@app.get("/about")
+def about_page(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
+# Route for search page
+@app.get("/search")
+def search_page(request: Request):
+    return templates.TemplateResponse("search.html", {"request": request})
+
+# Route for login page
+@app.get("/login")
+def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+# Route for profile page
+@app.get("/profile")
+def profile_page(request: Request):
+    return templates.TemplateResponse("profile.html", {"request": request})
+
+# Route for users test page
+@app.get("/users-test")
+def users_test_page(request: Request):
+    return templates.TemplateResponse("usersTest.html", {"request": request})
+
+# Alternative route for users test page (without hyphen)
+@app.get("/usersTest")
+def users_test_page_alt(request: Request):
+    return templates.TemplateResponse("usersTest.html", {"request": request})
 
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
@@ -184,3 +228,71 @@ def delete_user(user_id: int = Form(...)):
     
     # Return a confirmation message as HTML
     return f"<p>User with ID {user_id} has been deleted successfully.</p>"
+
+@app.get("/users/search", response_class=HTMLResponse)
+def search_users(search_term: str = ""):
+    """
+    API endpoint to search for users based on a search term.
+    The search matches against both name and email fields.
+    Returns an HTML table of matching users for HTMX frontend.
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # Use LIKE with wildcards to search for partial matches in name or email
+        search_pattern = f"%{search_term}%"
+        cursor.execute(
+            "SELECT * FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY name",
+            (search_pattern, search_pattern)
+        )
+        users = cursor.fetchall()
+        conn.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    if not users:
+        return "<p>No matching users found</p>"
+    
+    # Build HTML table rows for each matching user
+    table_rows = "".join(
+        f"<tr><td>{user['user_id']}</td><td>{user['name']}</td><td>{user['email']}</td></tr>" 
+        for user in users
+    )
+    
+    html_content = f"""
+    <table border="1">
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th></tr>
+        </thead>
+        <tbody>
+            {table_rows}
+        </tbody>
+    </table>
+    """
+    return HTMLResponse(content=html_content)
+
+@app.get("/users/search/json")
+def search_users_json(search_term: str = ""):
+    """
+    API endpoint to search for users based on a search term, returning JSON.
+    The search matches against both name and email fields.
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # Use LIKE with wildcards to search for partial matches in name or email
+        search_pattern = f"%{search_term}%"
+        cursor.execute(
+            "SELECT * FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY name",
+            (search_pattern, search_pattern)
+        )
+        users = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    return users
