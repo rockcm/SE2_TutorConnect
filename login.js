@@ -23,25 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Login Form Submission
-  loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
+  loginForm.addEventListener("submit", (event) => {
+      // With HTMX handling the form submission, we don't need to
+      // prevent default or use fetch anymore.
+      // Just let HTMX do its job.
 
-      const response = await fetch("http://localhost:8000/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ username: email, password })
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-          localStorage.setItem("token", data.access_token);
-          alert("Login successful!");
-          window.location.href = "dashboard.html";
-      } else {
-          alert(data.detail);
-      }
+      // You could add client-side validation here if needed
+      console.log("Submitting login form via HTMX");
   });
 
   // Signup Form Submission

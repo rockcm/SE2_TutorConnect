@@ -7,6 +7,8 @@
     <title>TutorConnect - Welcome</title>
     <!-- Link to external CSS file -->
     <link rel="stylesheet" href="style.css" />
+    <!-- Authentication Helper -->
+    <script src="auth.js"></script>
   </head>
   <body>
     <!-- ==================== HEADER ==================== -->
@@ -66,8 +68,10 @@
         /* RIGHT SECTION: Small Login/Create Button */
         .nav-right {
           margin-left: 20px; /* Some spacing from center */
+          display: flex;
+          align-items: center;
         }
-        .login-btn {
+        .login-btn, .logout-btn {
           padding: 2px 6px; /* Smaller button size */
           font-size: 0.8rem;
           border: none;
@@ -75,9 +79,21 @@
           color: #fff;
           border-radius: 4px;
           cursor: pointer;
+          text-decoration: none;
+          margin-left: 10px;
+        }
+        .logout-btn {
+          background-color: #f44336;
         }
         .login-btn:hover {
           background-color: #45a049;
+        }
+        .logout-btn:hover {
+          background-color: #d32f2f;
+        }
+        .user-greeting {
+          font-size: 0.9rem;
+          margin-right: 10px;
         }
       </style>
     
@@ -97,9 +113,19 @@
           <button class="search-btn">&#128270;</button>
         </div>
     
-        <!-- RIGHT: Login Button on the Far Right -->
+        <!-- RIGHT: Login/User Info based on auth state -->
         <div class="nav-right">
-          <a href="login.html" class="login-btn">Login/Create</a>
+          <!-- User greeting when logged in -->
+          <span class="user-greeting" style="display: none;"></span>
+          
+          <!-- Login button shown when not logged in -->
+          <a href="login.html" class="login-btn nav-login">Login/Create</a>
+          
+          <!-- Profile link shown when logged in -->
+          <a href="profile.html" class="login-btn nav-profile" style="display: none;">My Profile</a>
+          
+          <!-- Logout button shown when logged in -->
+          <a href="#" class="logout-btn nav-logout" style="display: none;" onclick="TutorConnectAuth.logout(); return false;">Logout</a>
         </div>
       </nav>
     </header>
@@ -112,7 +138,9 @@
         <p>
           Connect with experienced tutors and schedule sessions effortlessly.
         </p>
-        <a href="login.html" class="btn">Get Started</a>
+        <!-- Change button based on login state -->
+        <a href="login.html" class="btn nav-login">Get Started</a>
+        <a href="search.html" class="btn nav-profile" style="display: none;">Find a Tutor</a>
       </div>
     </section>
 

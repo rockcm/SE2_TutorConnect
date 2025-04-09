@@ -278,6 +278,7 @@ def search_users(search_term: str = ""):
     </table>
     """
     return HTMLResponse(content=html_content)
+
 @app.get("/users/search", response_class=HTMLResponse)
 async def search_users(request: Request, search_term: str = ""):
     """
@@ -351,5 +352,65 @@ async def search_users_json(request: Request, search_term: str = ""):
         raise HTTPException(status_code=500, detail=str(e))
     
     return users
+
+@app.post("/users/login", response_class=HTMLResponse)
+async def login_user(
+    request: Request,
+    email: str = Form(...),     # User's email
+    password: str = Form(...)   # User's password
+):
+    """
+    API endpoint to authenticate a user via form data (for HTMX).
+    Checks email and password against the database.
+    """
+    logger.info(f"Login attempt for email: {email}")
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # Check if user exists with the provided email and password
+        cursor.execute(
+            "SELECT * FROM users WHERE email = ? AND password = ?",
+            (email, password)
+        )
+        user = cursor.fetchone()
+        conn.close()
+        
+        if not user:
+            logger.warning(f"Login failed for email: {email}")
+            return "<p class='error'>Invalid email or password</p>"
+        
+        logger.info(f"Login successful for user: {user['name']} (ID: {user['user_id']})")
+        
+        # Return success message with user details (excluding password)
+        return f"""
+        <div class="login-success">
+            <h3>Login Successful!</h3>
+            <p>Welcome back, {user['name']}!</p>
+            <table border="1">
+                <tr><th>ID</th><td>{user['user_id']}</td></tr>
+                <tr><th>Name</th><td>{user['name']}</td></tr>
+                <tr><th>Email</th><td>{user['email']}</td></tr>
+                <tr><th>Role</th><td>{user['role']}</td></tr>
+            </table>
+            <script>
+                // Store user information in localStorage
+                localStorage.setItem('user_id', '{user['user_id']}');
+                localStorage.setItem('user_name', '{user['name']}');
+                localStorage.setItem('user_email', '{user['email']}');
+                localStorage.setItem('user_role', '{user['role']}');
+                localStorage.setItem('is_logged_in', 'true');
+                
+                // Redirect to dashboard or home page after a short delay
+                setTimeout(() => {{
+                    window.location.href = 'index.html';
+                }}, 1500);
+            </script>
+        </div>
+        """
+    except Exception as e:
+        logger.error(f"Error during login: {str(e)}")
+        return f"<p class='error'>Login error: {str(e)}</p>"
 
 

@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="search.css" />
     <!-- Import HTMX for handling dynamic requests -->
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <!-- Authentication Helper -->
+    <script src="auth.js"></script>
     
     <!-- Custom styles for the search results table -->
     <style>
@@ -56,9 +58,12 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="search.html">Search</a></li>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="../Profiles/profile.html">Profile</a></li>
+            <li><a href="login.html" class="nav-login">Login</a></li>
+            <li><a href="profile.html" class="nav-profile" style="display: none;">Profile</a></li>
+            <li><a href="#" class="nav-logout" style="display: none;" onclick="TutorConnectAuth.logout(); return false;">Logout</a></li>
           </ul>
+          <!-- User greeting when logged in -->
+          <span class="user-greeting" style="display: none; margin-left: 20px;"></span>
         </nav>
       </div>
     </header>
