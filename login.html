@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Sign Up | TutorConnect</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Import HTMX for handling dynamic requests -->
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <style>
+        /* Styles for signup result */
+        #signup-result {
+            margin-top: 20px;
+        }
+        #signup-result table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+        }
+        #signup-result th, #signup-result td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #signup-result th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
@@ -24,16 +47,24 @@
         </form>
 
         <!-- Signup Form (Initially Hidden) -->
-        <form id="signupForm" class="hidden">
-            <input type="text" id="signupName" placeholder="Full Name" required>
-            <input type="email" id="signupEmail" placeholder="Email" required>
-            <input type="password" id="signupPassword" placeholder="Password" required>
+        <form id="signupForm" class="hidden" 
+              hx-post="http://localhost:8000/users/create" 
+              hx-trigger="submit" 
+              hx-target="#signup-result"
+              hx-swap="outerHTML"
+              enctype="multipart/form-data">
+            <input type="text" id="signupName" name="name" placeholder="Full Name" required>
+            <input type="email" id="signupEmail" name="email" placeholder="Email" required>
+            <input type="password" id="signupPassword" name="password" placeholder="Password" required>
             <div class="radio-account-type">
-                <label for="student"><input type="radio" id="student" name="accountType" value="Student" required> Student</label>
-                <label for="tutor"><input type="radio" id="tutor" name="accountType" value="Tutor" required> Tutor</label>
+                <label for="student"><input type="radio" id="student" name="role" value="student" required> Student</label>
+                <label for="tutor"><input type="radio" id="tutor" name="role" value="tutor" required> Tutor</label>
             </div>
             <button type="submit">Sign Up</button>
         </form>
+        
+        <!-- Signup Result Area -->
+        <div id="signup-result"></div>
     </div>
 
     <script src="login.js"></script>
