@@ -6,32 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TutorConnect - Welcome</title>
     <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
     <!-- ==================== HEADER ==================== -->
-    <!-- Site header containing the logo and navigation -->
-    <header class="site-header">
-      <div class="container">
-        <!-- Logo image -->
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
-          alt="TutorConnect Logo"
-          class="logo"
-        />
-        <!-- Navigation menu -->
-        <nav class="main-nav">
-          <ul>
-            <li><a href="#hero">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#testimonials">Testimonials</a></li>
-          </ul>
-        </nav>
-      </div>
+    <header>
+    
+      <nav class="navbar">
+        <!-- LEFT: Page Links -->
+        <div class="nav-left" style="vertical-align: middle;">
+          <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
+          <a href="/">Home</a>
+          <a href="#page2">Page2</a>
+          <a href="/search">Search</a>
+          <a href="#page4">Page4</a>
+        </div>
+    
+        <!-- CENTER: Search Bar -->
+        <div class="nav-search">
+          <input type="text" placeholder="Search..." />
+          <button class="search-btn">&#128270;</button>
+        </div>
+    
+        <!-- RIGHT: Login Button on the Far Right -->
+        <div class="nav-right">
+          <a href="/login" class="login-btn">Login/Create</a>
+        </div>
+      </nav>
     </header>
-
-   
 
     <!-- ==================== HERO SECTION ==================== -->
     <!-- The hero section with a vibrant background and a call-to-action button -->
@@ -41,7 +43,7 @@
         <p>
           Connect with experienced tutors and schedule sessions effortlessly.
         </p>
-        <a href="#top-login" class="btn">Get Started</a>
+        <a href="/login" class="btn">Get Started</a>
       </div>
     </section>
 
@@ -163,6 +165,6 @@
     </footer>
 
     <!-- External JavaScript file (if needed) -->
-    <script src="script.js"></script>
+    <script src="/static/script.js"></script>
   </body>
 </html>

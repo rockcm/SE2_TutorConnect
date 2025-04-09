@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up | TutorConnect</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <h2 id="formTitle">Login</h2>
+
+        <!-- Toggle Buttons -->
+        <div class="toggle-container">
+            <button id="showLogin" class="active">Login</button>
+            <button id="showSignup">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Signup Form (Initially Hidden) -->
+        <form id="signupForm" class="hidden">
+            <input type="text" id="signupName" placeholder="Full Name" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <div class="radio-account-type">
+                <label for="student"><input type="radio" id="student" name="accountType" value="Student" required> Student</label>
+                <label for="tutor"><input type="radio" id="tutor" name="accountType" value="Tutor" required> Tutor</label>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <nav class="main-nav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/search">Search</a></li>
+        <li><a href="/login">Login</a></li>
+      </ul>
+    </nav>
+
+    <script src="/static/login.js"></script>
+</body>
+</html>

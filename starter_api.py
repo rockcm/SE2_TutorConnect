@@ -4,7 +4,13 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import Literal  # Restrict role values
 from auth_utils import get_current_user, create_access_token, verify_password, hash_password
+<<<<<<< HEAD
 from database import SessionLocal, User  # Import User model and database session
+import register  # Import register API from register.py
+=======
+# Import User model and database session
+from database import SessionLocal, User
+>>>>>>> c336c64 (fixed whitespace)
 
 # Authentication changes:
 # - Implemented authentication with JWT tokens.
@@ -15,7 +21,12 @@ from database import SessionLocal, User  # Import User model and database sessio
 
 app = FastAPI()
 
+# Include register routes from register.py
+app.include_router(register.router)
+
 # Dependency to get database session
+
+
 def get_db():
     db = SessionLocal()
     try:
@@ -24,21 +35,26 @@ def get_db():
         db.close()
 
 # User registration model
+
+
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
     role: Literal["student", "tutor"]  # ✅ Restricts roles to valid values
 
+<<<<<<< HEAD
+=======
+
 @app.post("/register", status_code=201)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
     """Registers a new user with hashed password and stores in database"""
-    
+
     # Check if user already exists
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already exists")
-    
+
     # Hash the password before storing
     hashed_password = hash_password(user.password)
 
@@ -54,31 +70,45 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    return {"message": "User registered successfully", "user_id": new_user.user_id}
+    return {
+        "message": "User registered successfully",
+        "user_id": new_user.user_id}
 
+
+>>>>>>> c336c64 (fixed whitespace)
 @app.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login(
+        form_data: OAuth2PasswordRequestForm = Depends(),
+        db: Session = Depends(get_db)):
     """Logs in a user and returns an access token"""
 
     # Find user by email
     user = db.query(User).filter(User.email == form_data.username).first()
-    
-    if not user or not verify_password(form_data.password, user.hashed_password):
+
+    if not user or not verify_password(
+            form_data.password,
+            user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    # ✅ Generate access token using user_id instead of email
-    access_token = create_access_token(data={"sub": user.user_id, "role": user.role})
-    
+    # Generate access token using user_id instead of email
+    access_token = create_access_token(
+        data={"sub": user.user_id, "role": user.role})
+
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 @app.get("/protected-endpoint")
 def protected_route(current_user: dict = Depends(get_current_user)):
     """Protected route that requires authentication"""
-    return {"message": "You have accessed a protected route!", "user": current_user}
+    return {
+        "message": "You have accessed a protected route!",
+        "user": current_user}
+
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome to FastAPI Starter with Authentication!"}
+
 
 if __name__ == "__main__":
     import uvicorn
