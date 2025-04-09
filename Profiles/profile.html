@@ -146,6 +146,42 @@
             }
         });
     </script>
+
+    <!-- Handle URL parameters for viewing other profiles -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const profileUserId = urlParams.get('user_id');
+            
+            // If a specific user_id is provided, fetch that user's profile
+            // Otherwise, use the logged-in user's data
+            if (profileUserId) {
+                // Attempt to load the specified user from the API
+                fetch(`http://localhost:8000/users/json?user_id=${profileUserId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('User not found');
+                        }
+                        return response.json();
+                    })
+                    .then(userData => {
+                        // If successful, populate the profile with this user's data
+                        populateUserProfile(userData);
+                        showRoleSpecificSection(userData.role);
+                    })
+                    .catch(error => {
+                        console.error('Error loading profile:', error);
+                        // Fall back to displaying the current user's profile
+                        const currentUserData = TutorConnectAuth.getCurrentUser();
+                        if (currentUserData) {
+                            populateUserProfile(currentUserData);
+                            showRoleSpecificSection(currentUserData.role);
+                        }
+                    });
+            }
+        });
+    </script>
 </body>
 </html>
 

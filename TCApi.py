@@ -120,23 +120,37 @@ async def get_users(request: Request):
     """
     return HTMLResponse(content=html_content)
 
-@app.get("/users/json", response_model=List[Dict])
-def get_users_json():
-    """API endpoint to get all users as JSON."""
+@app.get("/users/json")
+async def get_users_json(user_id: int = None):
+    """API endpoint to get all users as JSON or a single user by ID."""
     try:
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
+        
+        # If user_id is provided, get that specific user
+        if user_id is not None:
+            cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+            result = cursor.fetchone()
+            conn.close()
+            
+            if not result:
+                raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
+            
+            return dict(result)
+        
+        # Otherwise, get all users
         cursor.execute("SELECT * FROM users")
         users = [dict(row) for row in cursor.fetchall()]
         conn.close()
+        
+        if not users:
+            raise HTTPException(status_code=404, detail="No users found")
+        
+        return users
     except Exception as e:
+        logger.error(f"Error getting users: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-    
-    if not users:
-        raise HTTPException(status_code=404, detail="No users found")
-    
-    return users
 
 @app.post("/users/update", response_class=HTMLResponse)
 async def update_user(
