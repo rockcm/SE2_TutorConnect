@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <!-- Import HTMX for handling dynamic requests -->
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <!-- Navigation styling -->
+    <link rel="stylesheet" href="navbar.css" />
     <style>
         /* Styles for signup result */
         #signup-result {
@@ -64,8 +66,45 @@
             border-left: 4px solid #f44336;
         }
     </style>
+    <!-- Authentication Helper -->
+    <script src="auth.js"></script>
 </head>
 <body>
+    <!-- Header Section with Navigation -->
+    <header>
+      <nav class="navbar">
+        <!-- LEFT: Page Links -->
+        <div class="nav-left" style="vertical-align: middle;">
+          <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
+          <a href="index.html">Home</a>
+          <a href="#page2">Page2</a>
+          <a href="search.html">Search</a>
+          <a href="#page4">Page4</a>
+        </div>
+    
+        <!-- CENTER: Search Bar -->
+        <div class="nav-search">
+          <input type="text" id="navSearchInput" placeholder="Search..." />
+          <button class="search-btn" onclick="goToSearch()">&#128270;</button>
+        </div>
+    
+        <!-- RIGHT: Login/User Info based on auth state -->
+        <div class="nav-right">
+          <!-- User greeting when logged in -->
+          <span class="user-greeting" style="display: none;"></span>
+          
+          <!-- Login button shown when not logged in -->
+          <a href="login.html" class="login-btn nav-login">Login/Create</a>
+          
+          <!-- Profile link shown when logged in -->
+          <a href="Profiles/profile.html" class="login-btn nav-profile" style="display: none;">My Profile</a>
+          
+          <!-- Logout button shown when logged in -->
+          <a href="#" class="logout-btn nav-logout" style="display: none;" onclick="TutorConnectAuth.logout(); return false;">Logout</a>
+        </div>
+      </nav>
+    </header>
+
     <div class="auth-container">
         <h2 id="formTitle">Login</h2>
 
@@ -112,5 +151,26 @@
     </div>
 
     <script src="login.js"></script>
+    
+    <!-- Navbar search functionality -->
+    <script>
+      function goToSearch() {
+        const searchTerm = document.getElementById('navSearchInput').value;
+        if (searchTerm.trim() !== '') {
+          window.location.href = `search.html?search=${encodeURIComponent(searchTerm)}`;
+        } else {
+          window.location.href = 'search.html';
+        }
+      }
+      
+      // Also allow pressing Enter to search
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('navSearchInput').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            goToSearch();
+          }
+        });
+      });
+    </script>
 </body>
 </html>
