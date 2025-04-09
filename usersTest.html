@@ -22,6 +22,19 @@
         Load Users
     </button>
 
+    <!-- Search form with real-time search functionality -->
+    <div style="margin: 20px 0;">
+        <h2>Search Users</h2>
+        <input 
+            type="text" 
+            name="search_term" 
+            placeholder="Search by name or email" 
+            hx-get="http://localhost:8000/users/search" 
+            hx-trigger="keyup changed delay:300ms" 
+            hx-target="#user-table"
+        >
+    </div>
+
     <!-- Container where the users table will be loaded -->
     <div id="user-table">
         <!-- Users will be loaded here -->

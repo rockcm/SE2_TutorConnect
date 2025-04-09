@@ -234,6 +234,7 @@ def delete_user(user_id: int = Form(...)):
     
     # Return a confirmation message as HTML
     return f"<p>User with ID {user_id} has been deleted successfully.</p>"
+
 @app.get("/users/search", response_class=HTMLResponse)
 def search_users(search_term: str = ""):
     """
@@ -277,13 +278,60 @@ def search_users(search_term: str = ""):
     </table>
     """
     return HTMLResponse(content=html_content)
+@app.get("/users/search", response_class=HTMLResponse)
+async def search_users(request: Request, search_term: str = ""):
+    """
+    API endpoint to search for users based on a search term.
+    The search matches against both name and email fields.
+    Returns an HTML table of matching users for HTMX frontend.
+    """
+    logger.info(f"Searching users with term: '{search_term}'")
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # Use LIKE with wildcards to search for partial matches in name or email
+        search_pattern = f"%{search_term}%"
+        cursor.execute(
+            "SELECT * FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY name",
+            (search_pattern, search_pattern)
+        )
+        users = cursor.fetchall()
+        conn.close()
+        logger.info(f"Found {len(users)} users matching '{search_term}'")
+    except Exception as e:
+        logger.error(f"Error searching users: {str(e)}")
+        return f"<p>Error searching users: {str(e)}</p>"
+    
+    if not users:
+        return "<p>No matching users found</p>"
+    
+    # Build HTML table rows for each matching user
+    table_rows = "".join(
+        f"<tr><td>{user['user_id']}</td><td>{user['name']}</td><td>{user['email']}</td><td>{user['role']}</td></tr>" 
+        for user in users
+    )
+    
+    html_content = f"""
+    <table border="1">
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+            {table_rows}
+        </tbody>
+    </table>
+    """
+    return HTMLResponse(content=html_content)
 
 @app.get("/users/search/json")
-def search_users_json(search_term: str = ""):
+async def search_users_json(request: Request, search_term: str = ""):
     """
     API endpoint to search for users based on a search term, returning JSON.
     The search matches against both name and email fields.
     """
+    logger.info(f"Searching users (JSON) with term: '{search_term}'")
     try:
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
@@ -297,8 +345,11 @@ def search_users_json(search_term: str = ""):
         )
         users = [dict(row) for row in cursor.fetchall()]
         conn.close()
+        logger.info(f"Found {len(users)} users matching '{search_term}' (JSON)")
     except Exception as e:
+        logger.error(f"Error searching users (JSON): {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
     
     return users
+
 
