@@ -1,10 +1,33 @@
-from fastapi import FastAPI, HTTPException, Form
+from fastapi import FastAPI, HTTPException, Form, Request
 import sqlite3
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from typing import List, Dict
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import traceback
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("api")
 
 app = FastAPI()
+
+# Add middleware to log all requests
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    logger.info(f"Request: {request.method} {request.url}")
+    try:
+        response = await call_next(request)
+        logger.info(f"Response status: {response.status_code}")
+        return response
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        logger.error(traceback.format_exc())
+        return JSONResponse(
+            status_code=500,
+            content={"detail": str(e), "traceback": traceback.format_exc()},
+        )
 
 # Allow cross-origin requests (update settings in production)
 app.add_middleware(
@@ -15,49 +38,56 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Set up static files (CSS, JS, images)
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
 @app.post("/users/create", response_class=HTMLResponse)
-def create_user(
+async def create_user(
+    request: Request,
     name: str = Form(...),       # User's name
     email: str = Form(...),      # User's email
-    password: str = Form(...)    # User's password (new parameter)
+    password: str = Form(...),   # User's password
+    role: str = Form("user")     # User's role (with a default value)
 ):
     """
     API endpoint to create a new user via form data (for HTMX).
     Now accepts a password as well.
     """
+    logger.info(f"Creating user: {name}, {email}, role={role}")
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
-        # Insert a new user into the database, including the password field.
+        # Insert a new user into the database, including the role field
         cursor.execute(
-            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-            (name, email, password)
+            "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+            (name, email, password, role)
         )
         conn.commit()
         # Retrieve the ID of the newly created user
         user_id = cursor.lastrowid
         conn.close()
+        logger.info(f"User created successfully with ID: {user_id}")
     except sqlite3.Error as e:
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+        logger.error(f"Database error creating user: {str(e)}")
+        return f"<p>Error creating user: {str(e)}</p>"
     
     # Return an HTML table displaying the new user's ID, name, and email.
     # Note: Password is kept hidden for security reasons.
     return f"""
     <table border="1">
         <thead>
-            <tr><th>ID</th><th>Name</th><th>Email</th></tr>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>
         </thead>
         <tbody>
-            <tr><td>{user_id}</td><td>{name}</td><td>{email}</td></tr>
+            <tr><td>{user_id}</td><td>{name}</td><td>{email}</td><td>{role}</td></tr>
         </tbody>
     </table>
     """
 
 @app.get("/users", response_class=HTMLResponse)
-def get_users():
+async def get_users(request: Request):
     """API endpoint to get all users as an HTML table for HTMX frontend."""
+    logger.info("Getting all users")
     try:
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row  # Access rows as dictionaries
@@ -65,21 +95,23 @@ def get_users():
         cursor.execute("SELECT * FROM users")
         users = cursor.fetchall()
         conn.close()
+        logger.info(f"Found {len(users)} users")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error getting users: {str(e)}")
+        return f"<p>Error getting users: {str(e)}</p>"
     
     if not users:
         return "<p>No users found</p>"
     
     # Build HTML table rows for each user record (excluding the password field)
     table_rows = "".join(
-        f"<tr><td>{user['user_id']}</td><td>{user['name']}</td><td>{user['email']}</td></tr>" 
+        f"<tr><td>{user['user_id']}</td><td>{user['name']}</td><td>{user['email']}</td><td>{user['role']}</td></tr>" 
         for user in users
     )
     html_content = f"""
     <table border="1">
         <thead>
-            <tr><th>ID</th><th>Name</th><th>Email</th></tr>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>
         </thead>
         <tbody>
             {table_rows}
@@ -107,10 +139,11 @@ def get_users_json():
     return users
 
 @app.post("/users/update", response_class=HTMLResponse)
-def update_user(
+async def update_user(
     user_id: int = Form(...),  # The ID of the user to update
     name: str = Form(...),     # New name for the user
-    email: str = Form(...)     # New email for the user
+    email: str = Form(...),    # New email for the user
+    role: str = Form(None)     # New role for the user (optional)
 ):
     """
     API endpoint to update an existing user's details.
@@ -123,44 +156,61 @@ def update_user(
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
-        # Execute the update query for the specified user
-        cursor.execute(
-            "UPDATE users SET name = ?, email = ? WHERE user_id = ?",
-            (name, email, user_id)
-        )
-        conn.commit()
+        # First, check if the user exists
+        cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
+        current_user = cursor.fetchone()
         
-        # If no rows were updated, the user was not found
-        if cursor.rowcount == 0:
+        if not current_user:
             conn.close()
-            raise HTTPException(status_code=404, detail="User not found")
+            return "<p>User not found</p>"
+            
+        # Build update query based on provided parameters
+        update_values = [name, email]
+        update_query = "UPDATE users SET name = ?, email = ?"
+        
+        # Add role if provided and not None
+        if role is not None:
+            update_query += ", role = ?"
+            update_values.append(role)
+        
+        # Add WHERE clause and user_id parameter
+        update_query += " WHERE user_id = ?"
+        update_values.append(user_id)
+        
+        # Execute the update query
+        cursor.execute(update_query, update_values)
+        conn.commit()
         
         # Retrieve the updated user record to display in the HTML response
         cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
         user = cursor.fetchone()
         conn.close()
+        
+        if not user:
+            return "<p>Error: Updated user not found</p>"
+        
+        # Return an HTML table containing the updated user information
+        html_content = f"""
+        <table border="1">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{user['user_id']}</td>
+                    <td>{user['name']}</td>
+                    <td>{user['email']}</td>
+                    <td>{user['role']}</td>
+                </tr>
+            </tbody>
+        </table>
+        """
+        return HTMLResponse(content=html_content)
+        
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-    if not user:
-        return "<p>User not found</p>"
-    
-    # Return an HTML table containing the updated user information (excluding the password)
-    html_content = f"""
-    <table border="1">
-        <thead>
-            <tr><th>ID</th><th>Name</th><th>Email</th></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{user['user_id']}</td>
-                <td>{user['name']}</td>
-                <td>{user['email']}</td>
-            </tr>
-        </tbody>
-    </table>
-    """
-    return HTMLResponse(content=html_content)
+        logger.error(f"Error updating user: {str(e)}")
+        logger.error(traceback.format_exc())
+        return HTMLResponse(content=f"<p>Error updating user: {str(e)}</p>", status_code=500)
 
 @app.post("/users/delete", response_class=HTMLResponse)
 def delete_user(user_id: int = Form(...)):
@@ -184,3 +234,71 @@ def delete_user(user_id: int = Form(...)):
     
     # Return a confirmation message as HTML
     return f"<p>User with ID {user_id} has been deleted successfully.</p>"
+@app.get("/users/search", response_class=HTMLResponse)
+def search_users(search_term: str = ""):
+    """
+    API endpoint to search for users based on a search term.
+    The search matches against both name and email fields.
+    Returns an HTML table of matching users for HTMX frontend.
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # Use LIKE with wildcards to search for partial matches in name or email
+        search_pattern = f"%{search_term}%"
+        cursor.execute(
+            "SELECT * FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY name",
+            (search_pattern, search_pattern)
+        )
+        users = cursor.fetchall()
+        conn.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    if not users:
+        return "<p>No matching users found</p>"
+    
+    # Build HTML table rows for each matching user
+    table_rows = "".join(
+        f"<tr><td>{user['user_id']}</td><td>{user['name']}</td><td>{user['email']}</td><td>{user['role']}</td></tr>" 
+        for user in users
+    )
+    
+    html_content = f"""
+    <table border="1">
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+            {table_rows}
+        </tbody>
+    </table>
+    """
+    return HTMLResponse(content=html_content)
+
+@app.get("/users/search/json")
+def search_users_json(search_term: str = ""):
+    """
+    API endpoint to search for users based on a search term, returning JSON.
+    The search matches against both name and email fields.
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # Use LIKE with wildcards to search for partial matches in name or email
+        search_pattern = f"%{search_term}%"
+        cursor.execute(
+            "SELECT * FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY name",
+            (search_pattern, search_pattern)
+        )
+        users = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+    return users
+
