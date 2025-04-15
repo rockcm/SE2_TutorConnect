@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Tutors - TutorConnect</title>
+    <!-- Import Google Fonts for better typography -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="search.css" />
+    <!-- Import HTMX for handling dynamic requests -->
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <!-- Navigation styling -->
+    <link rel="stylesheet" href="navbar.css" />
+    <!-- Authentication Helper -->
+    <script src="auth.js"></script>
+    
+    <!-- Custom styles for the search results table -->
+    <style>
+      #tutorList table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-family: 'Roboto', sans-serif;
+      }
+      
+      #tutorList th, #tutorList td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      
+      #tutorList th {
+        background-color: #f5f5f5;
+        font-weight: 500;
+      }
+      
+      #tutorList tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      
+      #tutorList tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header Section with Logo and Navigation -->
+    <header>
+      <nav class="navbar">
+        <!-- LEFT: Page Links -->
+        <div class="nav-left" style="vertical-align: middle;">
+          <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
+          <a href="index.html">Home</a>
+          <a href="#page2">Page2</a>
+          <a href="search.html">Search</a>
+          <a href="#page4">Page4</a>
+        </div>
+    
+        <!-- CENTER: Search Bar -->
+        <div class="nav-search">
+          <input type="text" id="navSearchInput" placeholder="Search..." />
+          <button class="search-btn" onclick="goToSearch()">&#128270;</button>
+        </div>
+    
+        <!-- RIGHT: Login/User Info based on auth state -->
+        <div class="nav-right">
+          <!-- User greeting when logged in -->
+          <span class="user-greeting" style="display: none;"></span>
+          
+          <!-- Login button shown when not logged in -->
+          <a href="login.html" class="login-btn nav-login">Login/Create</a>
+          
+          <!-- Profile link shown when logged in -->
+          <a href="Profiles/profile.html" class="login-btn nav-profile" style="display: none;">My Profile</a>
+          
+          <!-- Logout button shown when logged in -->
+          <a href="#" class="logout-btn nav-logout" style="display: none;" onclick="TutorConnectAuth.logout(); return false;">Logout</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Search Section with Input Field and Filters -->
+    <section id="search" class="search">
+      <div class="container">
+        <h2>Search</h2>
+        
+        <!-- Search Type Toggle -->
+        <div class="search-toggle" style="margin-bottom: 20px; text-align: center;">
+          <button id="tutorSearchBtn" onclick="switchSearch('tutor')" style="padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px 0 0 4px; cursor: pointer;">Tutors</button>
+          <button id="userSearchBtn" onclick="switchSearch('user')" style="padding: 8px 16px; background-color: #ddd; color: #333; border: none; border-radius: 0 4px 4px 0; cursor: pointer;">Users</button>
+        </div>
+
+        <!-- Tutor Search Form -->
+        <div id="tutorSearchForm">
+          <h3>Find a Tutor</h3>
+          <input
+            type="text"
+            id="tutorSearchBar"
+            name="search_term"
+            placeholder="Search by tutor name or subject..."
+            hx-get="/users/search"
+            hx-trigger="keyup changed delay:400ms"
+            hx-target="#tutorList"
+          />
+
+          <div class="filters">
+            <label for="subject">Filter by Subject:</label>
+            <select id="subject">
+              <option value="">All Subjects</option>
+              <option value="math">Math</option>
+              <option value="science">Science</option>
+              <option value="english">English</option>
+              <option value="history">History</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- User Search Form (Hidden by Default) -->
+        <div id="userSearchForm" style="display: none;">
+          <h3>Find a User</h3>
+          <input
+            type="text"
+            id="userSearchBar"
+            name="search_term"
+            placeholder="Search by name or email..."
+            hx-get="http://localhost:8000/users/search"
+            hx-trigger="keyup changed delay:300ms"
+            hx-target="#userList"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section displaying Tutor Cards -->
+    <section id="results" class="results">
+      <div class="container">
+        <!-- Tutor Results -->
+        <div id="tutorResults">
+          <h2>Available Tutors</h2>
+          <ul id="tutorList">
+            <!-- Search results will appear here -->
+            <li class="tutor">Start typing in the search box to find tutors</li>
+          </ul>
+        </div>
+
+        <!-- User Results (Hidden by Default) -->
+        <div id="userResults" style="display: none;">
+          <h2>Users</h2>
+          <div id="userList">
+            <!-- User search results will appear here -->
+            <p>Start typing in the search box to find users</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; 2025 TutorConnect. All rights reserved.</p>
+      </div>
+    </footer>
+    <script src="search.js"></script>
+    
+    <!-- Toggle search functionality -->
+    <script>
+      function switchSearch(type) {
+        if (type === 'tutor') {
+          // Show tutor search, hide user search
+          document.getElementById('tutorSearchForm').style.display = 'block';
+          document.getElementById('userSearchForm').style.display = 'none';
+          document.getElementById('tutorResults').style.display = 'block';
+          document.getElementById('userResults').style.display = 'none';
+          
+          // Update button styles
+          document.getElementById('tutorSearchBtn').style.backgroundColor = '#4CAF50';
+          document.getElementById('tutorSearchBtn').style.color = 'white';
+          document.getElementById('userSearchBtn').style.backgroundColor = '#ddd';
+          document.getElementById('userSearchBtn').style.color = '#333';
+        } else {
+          // Show user search, hide tutor search
+          document.getElementById('tutorSearchForm').style.display = 'none';
+          document.getElementById('userSearchForm').style.display = 'block';
+          document.getElementById('tutorResults').style.display = 'none';
+          document.getElementById('userResults').style.display = 'block';
+          
+          // Update button styles
+          document.getElementById('userSearchBtn').style.backgroundColor = '#4CAF50';
+          document.getElementById('userSearchBtn').style.color = 'white';
+          document.getElementById('tutorSearchBtn').style.backgroundColor = '#ddd';
+          document.getElementById('tutorSearchBtn').style.color = '#333';
+        }
+      }
+      
+      // Navbar search functionality
+      function goToSearch() {
+        const searchTerm = document.getElementById('navSearchInput').value;
+        if (searchTerm.trim() !== '') {
+          window.location.href = `search.html?search=${encodeURIComponent(searchTerm)}`;
+        } else {
+          window.location.href = 'search.html';
+        }
+      }
+      
+      // Process URL parameters on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get search parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchParam = urlParams.get('search');
+        
+        if (searchParam) {
+          // Set the search input value
+          const tutorSearchBar = document.getElementById('tutorSearchBar');
+          if (tutorSearchBar) {
+            tutorSearchBar.value = searchParam;
+            // Trigger the search (if using HTMX, this would trigger the request)
+            const event = new Event('keyup');
+            tutorSearchBar.dispatchEvent(event);
+          }
+        }
+        
+        // Also allow pressing Enter to search in the navbar
+        document.getElementById('navSearchInput').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            goToSearch();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -4,23 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TutorConnect - Profile</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="/static/profile.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="profile.css">
+    <!-- Navigation styling -->
+    <link rel="stylesheet" href="../navbar.css" />
+    <!-- Authentication Helper -->
+    <script src="../auth.js"></script>
 </head>
 <body>
 
     <!-- ==================== HEADER ==================== -->
-    <header class="site-header">
-        <div class="container">
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="TutorConnect Logo" class="logo">
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/profile">Profile</a></li>
-                    <li><a href="#" id="logout">Logout</a></li>
-                </ul>
-            </nav>
+    <header>
+      <nav class="navbar">
+        <!-- LEFT: Page Links -->
+        <div class="nav-left" style="vertical-align: middle;">
+          <img src="../tutor_connect.png" alt="Tutor logo" width="40" height="40" style="border-radius:50px" >
+          <a href="../index.html">Home</a>
+          <a href="../#page2">Page2</a>
+          <a href="../search.html">Search</a>
+          <a href="../#page4">Page4</a>
         </div>
+    
+        <!-- CENTER: Search Bar -->
+        <div class="nav-search">
+          <input type="text" id="navSearchInput" placeholder="Search..." />
+          <button class="search-btn" onclick="goToSearch()">&#128270;</button>
+        </div>
+    
+        <!-- RIGHT: Login/User Info based on auth state -->
+        <div class="nav-right">
+          <!-- User greeting when logged in -->
+          <span class="user-greeting" style="display: none;"></span>
+          
+          <!-- Login button shown when not logged in -->
+          <a href="../login.html" class="login-btn nav-login">Login/Create</a>
+          
+          <!-- Profile link shown when logged in -->
+          <a href="profile.html" class="login-btn nav-profile" style="display: none;">My Profile</a>
+          
+          <!-- Logout button shown when logged in -->
+          <a href="#" class="logout-btn nav-logout" style="display: none;" onclick="TutorConnectAuth.logout(); return false;">Logout</a>
+        </div>
+      </nav>
     </header>
 
     <!-- ==================== PROFILE SECTION ==================== -->
@@ -28,16 +53,18 @@
         <div class="profile-card">
             <div class="profile-header">
                 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User Avatar" class="avatar">
-                <h2 id="user-name">John Doe</h2>
-                <p>@johndoe</p>
+                <h2 id="user-name">Loading...</h2>
+                <p>Loading...</p>
             </div>
             <div class="profile-details">
-                <p><strong>Email:</strong> johndoe@example.com</p>
-                <p><strong>Phone:</strong> +123 456 7890</p>
-                <p><strong>Location:</strong> New York, USA</p>
-                <p><strong>Languages:</strong> English, Spanish</p>
-                <p><strong>Role:</strong> <span id="user-role"></span></p>
-                <p><strong>Education:</strong> B.Sc. in Computer Science</p>
+                <p><strong>Email:</strong> <span id="user-email">Loading...</span></p>
+                <p><strong>Role:</strong> <span id="user-role">Loading...</span></p>
+                
+                <!-- Optional fields that can be added in the future -->
+                <p><strong>Phone:</strong> <span id="user-phone">Not provided</span></p>
+                <p><strong>Location:</strong> <span id="user-location">Not provided</span></p>
+                <p><strong>Languages:</strong> <span id="user-languages">Not specified</span></p>
+                <p><strong>Education:</strong> <span id="user-education">Not specified</span></p>
             </div>
             <button class="btn edit-btn">Edit Profile</button>
         </div>
@@ -87,6 +114,74 @@
     </footer>
 
     <script src="profile.js"></script>
+
+    <!-- Navbar search functionality -->
+    <script>
+      function goToSearch() {
+        const searchTerm = document.getElementById('navSearchInput').value;
+        if (searchTerm.trim() !== '') {
+          window.location.href = `../search.html?search=${encodeURIComponent(searchTerm)}`;
+        } else {
+          window.location.href = '../search.html';
+        }
+      }
+      
+      // Also allow pressing Enter to search
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('navSearchInput').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            goToSearch();
+          }
+        });
+      });
+    </script>
+
+    <!-- Redirect if not logged in -->
+    <script>
+        // Check if user is logged in on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!TutorConnectAuth.isLoggedIn()) {
+                // Redirect to login page if not logged in
+                window.location.href = "../login.html";
+            }
+        });
+    </script>
+
+    <!-- Handle URL parameters for viewing other profiles -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const profileUserId = urlParams.get('user_id');
+            
+            // If a specific user_id is provided, fetch that user's profile
+            // Otherwise, use the logged-in user's data
+            if (profileUserId) {
+                // Attempt to load the specified user from the API
+                fetch(`http://localhost:8000/users/json?user_id=${profileUserId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('User not found');
+                        }
+                        return response.json();
+                    })
+                    .then(userData => {
+                        // If successful, populate the profile with this user's data
+                        populateUserProfile(userData);
+                        showRoleSpecificSection(userData.role);
+                    })
+                    .catch(error => {
+                        console.error('Error loading profile:', error);
+                        // Fall back to displaying the current user's profile
+                        const currentUserData = TutorConnectAuth.getCurrentUser();
+                        if (currentUserData) {
+                            populateUserProfile(currentUserData);
+                            showRoleSpecificSection(currentUserData.role);
+                        }
+                    });
+            }
+        });
+    </script>
 </body>
 </html>
 

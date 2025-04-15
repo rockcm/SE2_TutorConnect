@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta information and linking external CSS -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TutorConnect - Welcome</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- Navigation styling -->
+    <link rel="stylesheet" href="navbar.css" />
+    <!-- Authentication Helper -->
+    <script src="auth.js"></script>
+  </head>
+  <body>
+    <!-- ==================== HEADER ==================== -->
+    <header>
+      <nav class="navbar">
+        <!-- LEFT: Page Links -->
+        <div class="nav-left" style="vertical-align: middle;">
+          <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
+          <a href="/">Home</a>
+          <a href="#page2">Page2</a>
+          <a href="/search">Search</a>
+          <a href="#page4">Page4</a>
+        </div>
+    
+        <!-- CENTER: Search Bar -->
+        <div class="nav-search">
+          <div class="search-container" style="position: relative; width: 100%;">
+            <input type="text" id="navSearchInput" placeholder="Search users..." autocomplete="off" />
+            <button class="search-btn" onclick="goToSearch()">&#128270;</button>
+            <!-- Dropdown results container -->
+            <div id="searchResults" class="search-results-dropdown" style="display: none;"></div>
+          </div>
+        </div>
+    
+        <!-- RIGHT: Login/User Info based on auth state -->
+        <div class="nav-right">
+          <!-- User greeting when logged in -->
+          <span class="user-greeting" style="display: none;"></span>
+          
+          <!-- Login button shown when not logged in -->
+          <a href="login.html" class="login-btn nav-login">Login/Create</a>
+          
+          <!-- Profile link shown when logged in -->
+          <a href="Profiles/profile.html" class="login-btn nav-profile" style="display: none;">My Profile</a>
+          
+          <!-- Logout button shown when logged in -->
+          <a href="#" class="logout-btn nav-logout" style="display: none;" onclick="TutorConnectAuth.logout(); return false;">Logout</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <!-- The hero section with a vibrant background and a call-to-action button -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <h1>Find the Perfect Tutor for You</h1>
+        <p>
+          Connect with experienced tutors and schedule sessions effortlessly.
+        </p>
+        <!-- Change button based on login state -->
+        <a href="login.html" class="btn nav-login">Get Started</a>
+        <a href="search.html" class="btn nav-profile" style="display: none;">Find a Tutor</a>
+      </div>
+    </section>
+
+    <!-- ==================== FEATURES SECTION ==================== -->
+    <!-- This section highlights key features of TutorConnect -->
+    <section id="features" class="features">
+      <div class="container">
+        <h2>Why Choose TutorConnect?</h2>
+        <ul>
+          <li>
+            <!-- Icon representing the feature -->
+            <span class="icon">🔍</span>
+            <div>
+              <strong>Smart Tutor Matching</strong>
+              <p>
+                Find the right tutor based on subject, price, and availability.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">📅</span>
+            <div>
+              <strong>Easy Booking</strong>
+              <p>Schedule tutoring sessions in just a few clicks.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">💳</span>
+            <div>
+              <strong>Secure Payments</strong>
+              <p>Pay safely with Stripe or PayPal.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">💬</span>
+            <div>
+              <strong>In-App Chat</strong>
+              <p>Communicate with your tutor before sessions.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">🗓️</span>
+            <div>
+              <strong>Calendar & Zoom Integration</strong>
+              <p>Never miss a session with built-in scheduling.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS SECTION ==================== -->
+    <!-- This section explains the process in clear steps -->
+    <section id="how-it-works" class="how-it-works">
+      <div class="container">
+        <h2>How It Works</h2>
+        <ol>
+          <li>
+            <!-- Step number styled as a circle -->
+            <span class="step-number">1</span>
+            <div>
+              <strong>Sign Up</strong>
+              <p>Create your free account in seconds.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number">2</span>
+            <div>
+              <strong>Find a Tutor</strong>
+              <p>Use filters to discover the best tutor for you.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number">3</span>
+            <div>
+              <strong>Book a Session</strong>
+              <p>Choose a time that works and confirm your booking.</p>
+            </div>
+          </li>
+          <li>
+            <span class="step-number">4</span>
+            <div>
+              <strong>Start Learning!</strong>
+              <p>Connect with your tutor and level up your skills.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ==================== TESTIMONIALS SECTION ==================== -->
+    <!-- Section showcasing user testimonials -->
+    <section id="testimonials" class="testimonials">
+      <div class="container">
+        <h2>What Our Users Say</h2>
+        <div class="testimonial-cards">
+          <div class="card">
+            <blockquote>
+              "TutorConnect helped me boost my grades in just a few weeks!"
+            </blockquote>
+            <p class="user">– Samantha J.</p>
+          </div>
+          <div class="card">
+            <blockquote>
+              "I found great students and love teaching here!"
+            </blockquote>
+            <p class="user">– James P.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <!-- Footer section with copyright information -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; 2025 TutorConnect. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- External JavaScript file (if needed) -->
+    <script src="script.js"></script>
+    
+    <!-- Navbar search functionality -->
+    <script>
+      // Global variables
+      let searchTimeout;
+      const searchDelay = 300; // Milliseconds to wait after typing before searching
+      
+      // Initialize search functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('navSearchInput');
+        const searchResults = document.getElementById('searchResults');
+        
+        // Handle input in search box
+        searchInput.addEventListener('input', function() {
+          const query = this.value.trim();
+          
+          // Clear previous timeout
+          clearTimeout(searchTimeout);
+          
+          // Hide dropdown if query is empty
+          if (query === '') {
+            searchResults.style.display = 'none';
+            return;
+          }
+          
+          // Set a timeout to prevent too many requests while typing
+          searchTimeout = setTimeout(() => {
+            fetchSearchResults(query);
+          }, searchDelay);
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+          }
+        });
+        
+        // Allow Enter key to search
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            goToSearch();
+          }
+        });
+      });
+      
+      // Fetch search results from API
+      function fetchSearchResults(query) {
+        // Show loading state
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '<div class="search-result-item">Loading...</div>';
+        searchResults.style.display = 'block';
+        
+        // Make API request
+        fetch(`http://localhost:8000/users/search/json?search_term=${encodeURIComponent(query)}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(users => {
+            displaySearchResults(users);
+          })
+          .catch(error => {
+            console.error('Error fetching search results:', error);
+            searchResults.innerHTML = '<div class="search-no-results">Error fetching results</div>';
+          });
+      }
+      
+      // Display search results in dropdown
+      function displaySearchResults(users) {
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '';
+        
+        if (users.length === 0) {
+          searchResults.innerHTML = '<div class="search-no-results">No users found</div>';
+          return;
+        }
+        
+        // Limit to first 5 results for better UX
+        const displayUsers = users.slice(0, 5);
+        
+        displayUsers.forEach(user => {
+          const resultItem = document.createElement('div');
+          resultItem.className = 'search-result-item';
+          resultItem.innerHTML = `
+            <span class="user-name">${user.name}</span>
+            <span class="user-email">${user.email}</span>
+            <span class="user-role">${user.role}</span>
+          `;
+          
+          // Add click handler to go to profile or show details
+          resultItem.addEventListener('click', function() {
+            window.location.href = `Profiles/profile.html?user_id=${user.user_id}`;
+          });
+          
+          searchResults.appendChild(resultItem);
+        });
+        
+        // Add "View all results" option if more than 5 users
+        if (users.length > 5) {
+          const viewAllItem = document.createElement('div');
+          viewAllItem.className = 'search-result-item';
+          viewAllItem.innerHTML = `<strong>View all ${users.length} results</strong>`;
+          viewAllItem.addEventListener('click', function() {
+            goToSearch();
+          });
+          searchResults.appendChild(viewAllItem);
+        }
+        
+        searchResults.style.display = 'block';
+      }
+      
+      // Navigate to search page with current query
+      function goToSearch() {
+        const searchTerm = document.getElementById('navSearchInput').value;
+        if (searchTerm.trim() !== '') {
+          window.location.href = `search.html?search=${encodeURIComponent(searchTerm)}`;
+        } else {
+          window.location.href = 'search.html';
+        }
+      }
+    </script>
+  </body>
+</html>
