@@ -23,59 +23,42 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Login Form Submission
-  loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
+  loginForm.addEventListener("submit", (event) => {
+      // With HTMX handling the form submission, we don't need to
+      // prevent default or use fetch anymore.
+      // Just let HTMX do its job.
 
-      const response = await fetch("http://localhost:8000/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ username: email, password })
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-          localStorage.setItem("token", data.access_token);
-          alert("Login successful!");
-          window.location.href = "dashboard.html";
-      } else {
-          alert(data.detail);
-      }
+      // You could add client-side validation here if needed
+      console.log("Submitting login form via HTMX");
   });
 
   // Signup Form Submission
-  signupForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+  signupForm.addEventListener("submit", (event) => {
+      // With HTMX handling the form submission to create a user,
+      // we don't need to prevent default or use fetch anymore.
+      // Just let HTMX do its job.
+      
+      // We could add any additional client-side validation here if needed
       const name = document.getElementById("signupName").value;
       const email = document.getElementById("signupEmail").value;
       const password = document.getElementById("signupPassword").value;
-      const role = document.querySelector('input[name="accountType"]:checked').value;
+      
+      // Log the submission (for debugging)
+      console.log("Submitting signup form via HTMX");
+  });
 
-        let userData = {
-            name: name,
-            email: email,
-            password: password,
-            role: role
-        };
-
-        try {
-            let response = await fetch("http://127.0.0.1:8000/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userData)
-            });
-    
-            let result = await response.json();
-            if (response.ok) {
-                alert("Registration successful! Please log in.");
-                window.location.href = "login.html"; // Redirect to login page
-            } else {
-                alert("Error: " + result.detail);
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Failed to register user.");
-        }
+  // Listen for successful registration via HTMX
+  document.body.addEventListener("htmx:afterSwap", function(event) {
+      // Check if the swap target was our signup-result area
+      if (event.detail.target.id === "signup-result") {
+          // If the response contains a table element, it was successful
+          if (event.detail.target.querySelector("table")) {
+              setTimeout(() => {
+                  alert("Registration successful! Please log in.");
+                  // Switch to login form
+                  showLoginBtn.click();
+              }, 500);
+          }
+      }
   });
 });

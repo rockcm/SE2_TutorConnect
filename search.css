@@ -1,0 +1,161 @@
+   /* Define CSS variables for easy theme changes */
+   :root {
+    --primary-color: #0073e6;
+    --secondary-color: #005bb5;
+    --background-color: #f4f4f9;
+    --card-bg: #ffffff;
+    --card-hover: #e9f1ff;
+    --text-color: #333;
+  }
+
+  /* Global Styles */
+  body {
+    font-family: 'Roboto', sans-serif; /* Use imported Google font */
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Header Styles */
+  .site-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 20px 0;
+    color: #fff;
+  }
+
+  /* Use Flexbox to align logo and navigation */
+  .site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    width: 60px;
+  }
+
+  .main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+
+  .main-nav ul li {
+    margin: 0 15px;
+  }
+
+  .main-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .main-nav a:hover {
+    color: #ffdd57; /* Subtle hover effect */
+  }
+
+  /* Search Section Styles */
+  .search {
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .search h2 {
+    margin-bottom: 20px;
+  }
+
+  /* Style for search input field */
+  .search input[type="text"] {
+    width: 80%;
+    max-width: 500px;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+  }
+
+  /* Change border color on focus for better UX */
+  .search input[type="text"]:focus {
+    border-color: var(--primary-color);
+  }
+
+  /* Filter styling */
+  .filters {
+    margin-top: 10px;
+  }
+
+  .filters label {
+    font-weight: 500;
+    margin-right: 10px;
+  }
+
+  .filters select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+  }
+
+  .filters select:focus {
+    border-color: var(--primary-color);
+  }
+
+  /* Results Section Styles */
+  .results {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+  }
+
+  .results h2 {
+    margin-bottom: 20px;
+  }
+
+  .results ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .results li {
+    background: var(--card-bg);
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  /* Hover effect for tutor list items */
+  .results li:hover {
+    background: var(--card-hover);
+    transform: translateX(5px);
+    border-color: var(--primary-color);
+  }
+
+  /* Footer Styles */
+  .site-footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--primary-color);
+    color: #fff;
+  }
