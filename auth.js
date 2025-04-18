@@ -73,8 +73,17 @@ function logout() {
     // Update UI
     updateUIBasedOnLoginState();
     
-    // Redirect to login page
-    window.location.href = 'login.html';
+    // Determine the correct path to login.html based on current URL
+    let loginPath = 'login.html';
+    
+    // Check if we're in a subdirectory (like /Profiles/)
+    if (window.location.pathname.includes('/Profiles/') || 
+        window.location.pathname.toLowerCase().includes('/profiles/')) {
+        loginPath = '../login.html';
+    }
+    
+    // Redirect to login page with the correct path
+    window.location.href = loginPath;
 }
 
 // Export functions for other scripts
