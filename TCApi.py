@@ -41,6 +41,10 @@ app.add_middleware(
 # Set up static files (CSS, JS, images)
 db_path = "TutorConnect.db"  # Path to the SQLite database
 
+@app.get("/")
+def read_root():
+    return {"message": "Hello from Dockerized FastAPI!"}
+
 @app.post("/users/create", response_class=HTMLResponse)
 async def create_user(
     request: Request,
