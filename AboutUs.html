@@ -131,21 +131,53 @@
       margin: 3px 0;
     }
   </style>
+      <!-- Link to external CSS file -->
+      <link rel="stylesheet" href="style.css" />
+      <!-- Navigation styling -->
+      <link rel="stylesheet" href="navbar.css" />
   <!--####################################################################################################################-->
   <!--#################### Css Above ##############################-->
   <!--####################################################################################################################-->
 </head>
 <body>
 
-  <!-- Top Navigation -->
+  <!-- ==================== HEADER ==================== -->
   <header>
-    <div class="top-nav">
-      <span class="logo">App Name &amp; Logo</span>
-      <a href="#">Page1</a>
-      <a href="#">Page2</a>
-      <a href="#">Page3</a>
-      <a href="#">Page4</a>
-    </div>
+    <nav class="navbar">
+      <!-- LEFT: Page Links -->
+      <div class="nav-left" style="vertical-align: middle;">
+        <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
+        <a href="/index.html">Home</a>
+        <a href="/AboutUs.html">About Us</a>
+        <a href="/search.html">Search</a>
+        <a href="#page4">Page4</a>
+      </div>
+  
+      <!-- CENTER: Search Bar -->
+      <div class="nav-search">
+        <div class="search-container" style="position: relative; width: 100%;">
+          <input type="text" id="navSearchInput" placeholder="Search users..." autocomplete="off" />
+          <button class="search-btn" onclick="goToSearch()">&#128270;</button>
+          <!-- Dropdown results container -->
+          <div id="searchResults" class="search-results-dropdown" style="display: none;"></div>
+        </div>
+      </div>
+  
+      <!-- RIGHT: Login/User Info based on auth state -->
+      <div class="nav-right">
+        <!-- User greeting when logged in -->
+        <span class="user-greeting" style="display: none;"></span>
+        
+        <!-- Login button shown when not logged in -->
+        <a href="login.html" class="login-btn nav-login">Login/Create</a>
+        
+        <!-- Profile link shown when logged in -->
+        <a href="Profiles/profile.html" class="login-btn nav-profile" style="display: none;">My Profile</a>
+        
+        <!-- Logout button shown when logged in -->
+        <a href="#" class="logout-btn nav-logout" style="display: none;" onclick="TutorConnectAuth.logout(); return false;">Logout</a>
+      </div>
+    </nav>
   </header>
 
   <!-- Banner -->
