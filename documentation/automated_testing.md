@@ -39,6 +39,50 @@ To run tests without opening a visible browser window (useful for CI/CD):
 python tests/run_payment_tests.py --headless
 ```
 
+## Visual Testing Demonstration
+
+For demonstration purposes, we provide two additional testing options:
+
+### 1. Visual Browser Automation
+
+To see the payment testing in action with a visible browser:
+
+```bash
+python tests/visual_payment_test.py
+```
+
+This will:
+1. Start the Flask server
+2. Open a Chrome browser window that you can see
+3. Navigate to the payment page
+4. Fill in the card information for each test card one by one
+5. Show the results for each test
+
+For a slower demonstration that's easier to follow:
+
+```bash
+python tests/visual_payment_test.py --slow
+```
+
+If your server is already running at a different URL:
+
+```bash
+python tests/visual_payment_test.py --url http://your-server-url/
+```
+
+### 2. Terminal-based Simulation
+
+If you don't have Chrome installed or prefer a terminal-based demo:
+
+```bash
+python tests/payment_test_simulation.py
+```
+
+This will:
+1. Simulate the payment testing process in your terminal
+2. Show color-coded outputs for different test scenarios
+3. Demonstrate the expected behavior without requiring a browser
+
 ### Test Cases
 
 The payment tests include the following scenarios:
