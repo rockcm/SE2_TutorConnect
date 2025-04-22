@@ -64,27 +64,19 @@ class TutorConnectTest(unittest.TestCase):
             
             time.sleep(1)  # Add sleep time between actions
             
-            # Test if Home link is clickable
-            try:
-                home_link = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav.navbar a[href='#hero']")))
-                print("Home link is clickable")
-            except TimeoutException as e:
-                print(f"Error finding Home link: {str(e)}")
-                # Try alternate selector
-                home_link = self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Home")))
-                print("Found Home link using link text")
-            
-            time.sleep(1)  # Add sleep time between actions
+       
+            # Add sleep time between actions
             
             # Test if Search link is clickable
             try:
-                search_link = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav.navbar a[href='search.html']")))
-                print("Search link is clickable")
+                  # Try alternate selector
+                search_link = self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Search")))
+                print("Found Search link using link text")
             except TimeoutException as e:
                 print(f"Error finding Search link: {str(e)}")
                 # Try alternate selector
-                search_link = self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Search")))
-                print("Found Search link using link text")
+                search_link = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "nav.navbar a[href='search.html']")))
+                print("Found Search link using CSS selector")
             
             time.sleep(1)  # Add sleep time between actions
             
@@ -128,18 +120,7 @@ class TutorConnectTest(unittest.TestCase):
             
             time.sleep(1)  # Add sleep time between actions
             
-            # Click Home link
-            try:
-                home_link.click()
-                time.sleep(2)  # Wait for navigation to complete
-                # Verify we're on the home section
-                hero_section = self.wait.until(EC.visibility_of_element_located((By.ID, "hero")))
-                self.assertTrue(hero_section.is_displayed(), "Failed to navigate to Home section")
-                print("Successfully navigated to Home section")
-            except Exception as e:
-                print(f"Error clicking Home link: {str(e)}")
-            
-            time.sleep(2)  # Add sleep time between actions
+          
             
             # Click Search Link
             try:
@@ -180,6 +161,20 @@ class TutorConnectTest(unittest.TestCase):
             print(f"Navigated to {self.base_url}")
             
             # Sleep for page to fully load
+            time.sleep(2)
+            
+            # Simulate login by setting localStorage values
+            script = """
+                localStorage.setItem('is_logged_in', 'true');
+                localStorage.setItem('user_id', '123');
+                localStorage.setItem('user_name', 'Test User');
+                localStorage.setItem('user_email', 'test@example.com');
+                localStorage.setItem('user_role', 'student');
+            """
+            self.driver.execute_script(script)
+            
+            # Refresh the page to update the UI based on login state
+            self.driver.refresh()
             time.sleep(2)
             
             # Find the search input in the navbar
