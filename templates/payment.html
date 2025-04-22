@@ -1,31 +1,270 @@
 <!DOCTYPE html>
-<html lan="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stripe Payment</title>
+    <title>Payment - TutorConnect</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* NAVBAR WRAPPER */
+        .navbar {
+          display: flex;
+          align-items: center;
+          background-color: #fc0000;
+          padding: 10px 20px;
+          border-bottom: 1px solid #ddd;
+          font-family: Arial, sans-serif;
+          height: 50px;
+          justify-content: space-between; /* Space out left, center, and right */
+        }
+    
+        /* LEFT SECTION: Page Links */
+        .nav-left a {
+          margin-right: 15px;
+          text-decoration: none;
+          color: #333;
+          font-weight: bold;
+        }
+        .nav-left a:hover {
+          color: #007bff;
+        }
+    
+        /* CENTER SECTION: Search Bar */
+        .nav-search {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 1; /* Let the search bar expand in the center */
+        }
+        .nav-search input[type="text"] {
+          width: 200px;
+          padding: 5px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+        .search-btn {
+          margin-left: 5px;
+          padding: 5px;
+          border: none;
+          background-color: #ddd;
+          border-radius: 4px;
+          cursor: pointer;
+          width: 50px;
+        }
+        .search-btn:hover {
+          background-color: #ccc;
+        }
+    
+        /* RIGHT SECTION: Small Login/Create Button */
+        .nav-right {
+          margin-left: 20px; /* Some spacing from center */
+        }
+        .login-btn {
+          padding: 2px 6px; /* Smaller button size */
+          font-size: 0.8rem;
+          border: none;
+          background-color: #4CAF50;
+          color: #fff;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .login-btn:hover {
+          background-color: #45a049;
+        }
+
+        /* Payment styles */
+        .payment-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2575fc;
+        }
+
+        .order-summary {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .order-summary h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-total {
+            font-weight: bold;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        #card-element {
+            background-color: white;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #submit-button {
+            background-color: #2575fc;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        #submit-button:hover {
+            background-color: #1a5cd6;
+        }
+
+        #payment-message {
+            text-align: center;
+            color: #333;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .payment-message-success {
+            color: #4CAF50;
+        }
+
+        .payment-message-error {
+            color: #f44336;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
 </head>
 <body>
-    <h2>Order Summary</h2>
-    <p>Tutor: John Doe</p>
-    <p>Subject: Math</p>
-    <p>Total Cost: $50</p>
+    <!-- Header with Navigation -->
+    <header>
+        <nav class="navbar">
+            <!-- LEFT: Page Links -->
+            <div class="nav-left" style="vertical-align: middle;">
+                <a href="/">Home</a>
+                <a href="/#features">Features</a>
+                <a href="/search.html">Search</a>
+                <a href="/#testimonials">Testimonials</a>
+            </div>
+        
+            <!-- CENTER: Search Bar -->
+            <div class="nav-search">
+                <input type="text" placeholder="Search..." />
+                <button class="search-btn">&#128270;</button>
+            </div>
+        
+            <!-- RIGHT: Login Button on the Far Right -->
+            <div class="nav-right">
+                <a href="/login.html" class="login-btn">Login/Create</a>
+            </div>
+        </nav>
+    </header>
 
-    <form id="payment-form">
-        <div id="card-element"></div>
-        <button type="submit" id="submit-button">Confirm Payment</button>
-    </form>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h2>Complete Your Payment</h2>
+            <p>Secure payment powered by Stripe</p>
+        </div>
 
-    <div id="payment-message"></div>
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <div class="order-item">
+                <span>Tutor:</span>
+                <span>John Doe</span>
+            </div>
+            <div class="order-item">
+                <span>Subject:</span>
+                <span>Math</span>
+            </div>
+            <div class="order-item">
+                <span>Session Duration:</span>
+                <span>1 hour</span>
+            </div>
+            <div class="order-item order-total">
+                <span>Total Amount:</span>
+                <span>$50.00</span>
+            </div>
+        </div>
+        
+        <!-- Test Cards Helper (Only for development) -->
+        <div class="test-cards" style="background-color: #fffde7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #ffc107;">
+            <h3 style="color: #ff9800; margin-top: 0;">Test Card Numbers</h3>
+            <p style="font-size: 0.9em; margin-bottom: 10px;">Use these test cards to simulate different payment scenarios:</p>
+            <ul style="list-style-type: none; padding-left: 0; font-size: 0.9em;">
+                <li style="margin-bottom: 8px;"><strong>Success:</strong> 4242 4242 4242 4242</li>
+                <li style="margin-bottom: 8px;"><strong>Requires Authentication:</strong> 4000 0025 0000 3155</li>
+                <li style="margin-bottom: 8px;"><strong>Declined (Insufficient Funds):</strong> 4000 0000 0000 9995</li>
+                <li style="margin-bottom: 8px;"><strong>Declined (Expired Card):</strong> 4000 0000 0000 0069</li>
+            </ul>
+            <p style="font-size: 0.8em; color: #757575; margin-bottom: 0;">
+                For any card number, use any future expiration date, any 3-digit CVC, and any postal code.
+            </p>
+        </div>
 
-    <!-- Back to Home Button -->
-    <br>
-    <a href="/">
-        <button>Back to Home</button>
-    </a>
+        <form id="payment-form">
+            <h3>Payment Details</h3>
+            <div id="card-element">
+                <!-- Stripe Card Element will be inserted here -->
+            </div>
+            <button type="submit" id="submit-button">Confirm Payment</button>
+        </form>
+
+        <div id="payment-message"></div>
+
+        <div class="back-link">
+            <a href="/" class="back-button">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 TutorConnect. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script>
         const stripe = Stripe("pk_test_51QyfE1Q2RFJ8x0HFF7lPr4xBHIytExHKkRaYWIz4EjMIsO6XVqGwDIyN1lpYBcjwdX1zfWMTGFPhYOEHefpPdF1l00wm4xupWK");  
@@ -50,14 +289,31 @@
 
             document.getElementById("payment-form").addEventListener("submit", async (event) => {
                 event.preventDefault();
+                
+                // Change button text while processing
+                const submitButton = document.getElementById("submit-button");
+                submitButton.textContent = "Processing...";
+                submitButton.disabled = true;
+                
                 const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
                     payment_method: { card: cardElement }
                 });
 
                 if (error) {
-                    document.getElementById("payment-message").textContent = "Payment Failed: " + error.message;
+                    const messageElement = document.getElementById("payment-message");
+                    messageElement.textContent = "Payment Failed: " + error.message;
+                    messageElement.className = "payment-message-error";
+                    
+                    // Re-enable button for retry
+                    submitButton.textContent = "Try Again";
+                    submitButton.disabled = false;
                 } else {
-                    document.getElementById("payment-message").textContent = "Payment Successful!";
+                    const messageElement = document.getElementById("payment-message");
+                    messageElement.textContent = "Payment Successful! Your session has been booked.";
+                    messageElement.className = "payment-message-success";
+                    
+                    // Keep button disabled after success
+                    submitButton.textContent = "Payment Complete";
                 }
             });
         }
@@ -66,4 +322,3 @@
     </script>
 </body>
 </html>
-
