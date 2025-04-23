@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lan="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h2>Order Summary</h2>
+    <p>Tutor: John Doe</p>
+    <p>Subject: Math</p>
+    <p>Total Cost: $50</p>
+
+    <form id="payment-form">
+        <div id="card-element"></div>
+        <button type="submit" id="submit-button">Confirm Payment</button>
+    </form>
+
+    <div id="payment-message"></div>
+
+    <!-- Back to Home Button -->
+    <br>
+    <a href="/">
+        <button>Back to Home</button>
+    </a>
+
+    <script>
+        const stripe = Stripe("pk_test_51QyfE1Q2RFJ8x0HFF7lPr4xBHIytExHKkRaYWIz4EjMIsO6XVqGwDIyN1lpYBcjwdX1zfWMTGFPhYOEHefpPdF1l00wm4xupWK");  
+
+        async function initPayment() {
+            const response = await fetch("/create-payment-intent", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ amount: 5000 }) // $50.00 in cents
+            });
+
+            if (!response.ok) {
+                console.error("Failed to fetch:", response.status, response.statusText);
+                return;
+            }
+
+            const { clientSecret } = await response.json();
+
+            const elements = stripe.elements();
+            const cardElement = elements.create("card");
+            cardElement.mount("#card-element");
+
+            document.getElementById("payment-form").addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: { card: cardElement }
+                });
+
+                if (error) {
+                    document.getElementById("payment-message").textContent = "Payment Failed: " + error.message;
+                } else {
+                    document.getElementById("payment-message").textContent = "Payment Successful!";
+                }
+            });
+        }
+
+        initPayment();
+    </script>
+</body>
+</html>
+
