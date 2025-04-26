@@ -16,8 +16,9 @@ class TutorConnectTest(unittest.TestCase):
     Tests the navbar functionality including navigation links and search.
     """
     
-    def setUp(self):
-        """Set up the test environment before each test method"""
+    @classmethod
+    def setUpClass(cls):
+        """Set up the test environment once for all test methods"""
         # Setup Chrome options
         options = webdriver.ChromeOptions()
         # options.add_argument('--headless')  # Comment out headless mode to see what's happening
@@ -30,29 +31,40 @@ class TutorConnectTest(unittest.TestCase):
         
         # Use webdriver_manager to handle ChromeDriver automatically
         service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=options)
-        self.driver.maximize_window()
+        cls.driver = webdriver.Chrome(service=service, options=options)
+        cls.driver.maximize_window()
         
         # Update the base URL if needed to match your actual application URL
-        self.base_url = "http://localhost:5501/index.html"  # Adjust this URL
+        cls.base_url = "http://localhost:5501/index.html"  # Adjust this URL
         
         # Set wait time for elements to load
-        self.wait = WebDriverWait(self.driver, 10)
+        cls.wait = WebDriverWait(cls.driver, 10)
+        
+        print("Browser setup complete - using single browser for all tests")
+    
+    @classmethod
+    def tearDownClass(cls):
+        """Clean up after all test methods"""
+        if cls.driver:
+            cls.driver.quit()
+            print("Browser closed after all tests")
+    
+    def setUp(self):
+        """Set up before each test method - navigate to base URL"""
+        # Navigate to the base URL at the start of each test
+        self.driver.get(self.base_url)
+        print(f"Navigated to {self.base_url}")
+        time.sleep(2)  # Wait for page to load
     
     def tearDown(self):
         """Clean up after each test method"""
-        if self.driver:
-            self.driver.quit()
+        # Clear any localStorage between tests
+        self.driver.execute_script("localStorage.clear();")
+        print("Cleared localStorage between tests")
     
     def test_navigation_buttons(self):
         """Test if all navbar elements are present and clickable"""
         try:
-            self.driver.get(self.base_url)
-            print(f"Navigated to {self.base_url}")
-            
-            # Sleep for page to fully load
-            time.sleep(2)
-            
             # Verify logo is present
             try:
                 logo = self.wait.until(EC.presence_of_element_located(
@@ -63,13 +75,12 @@ class TutorConnectTest(unittest.TestCase):
                 print(f"Error finding logo: {str(e)}")
             
             time.sleep(1)  # Add sleep time between actions
-            
-       
+        
             # Add sleep time between actions
             
             # Test if Search link is clickable
             try:
-                  # Try alternate selector
+                # Try alternate selector
                 search_link = self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Search")))
                 print("Found Search link using link text")
             except TimeoutException as e:
@@ -119,8 +130,7 @@ class TutorConnectTest(unittest.TestCase):
                 print(f"Error finding search input: {str(e)}")
             
             time.sleep(1)  # Add sleep time between actions
-            
-          
+           
             
             # Click Search Link
             try:
@@ -157,11 +167,17 @@ class TutorConnectTest(unittest.TestCase):
     def test_search_dropdown_and_profile(self):
         """Test search dropdown with 'chris' and click on result to view profile"""
         try:
-            self.driver.get(self.base_url)
-            print(f"Navigated to {self.base_url}")
+            # Find the search input in the navbar
+            search_input = self.wait.until(
+                EC.presence_of_element_located((By.ID, "navSearchInput")))
             
-            # Sleep for page to fully load
-            time.sleep(2)
+            # Clear the search input and type "chris"
+            search_input.clear()
+            search_input.send_keys("chris")
+            print("Typed 'chris' in search box")
+            
+            # Wait for the dropdown to appear
+            time.sleep(3)
             
             # Simulate login by setting localStorage values
             script = """
@@ -177,20 +193,17 @@ class TutorConnectTest(unittest.TestCase):
             self.driver.refresh()
             time.sleep(2)
             
-            # Find the search input in the navbar
-            search_input = self.wait.until(
-                EC.presence_of_element_located((By.ID, "navSearchInput")))
-            
-            # Clear the search input and type "chris"
-            search_input.clear()
-            search_input.send_keys("chris")
-            print("Typed 'chris' in search box")
-            
-            # Wait for the dropdown to appear
-            time.sleep(3)
-            
             # Check if search results dropdown is displayed
             try:
+                # Re-enter search term after page refresh
+                search_input = self.wait.until(
+                    EC.presence_of_element_located((By.ID, "navSearchInput")))
+                search_input.clear()
+                search_input.send_keys("chris")
+                
+                # Wait for the dropdown to appear
+                time.sleep(3)
+                
                 search_results_container = self.wait.until(
                     EC.visibility_of_element_located((By.ID, "searchResults")))
                 self.assertTrue(search_results_container.is_displayed(), "Search results dropdown is not displayed")
@@ -232,11 +245,11 @@ class TutorConnectTest(unittest.TestCase):
             
         except Exception as e:
             self.fail(f"Test failed with error: {str(e)}")
-    
+
     def test_logout_from_profile(self):
         """Test that logout from profile page redirects to the correct login page"""
         try:
-            # First, we need to login
+            # First, we need to navigate to login page
             self.driver.get(self.base_url.replace("index.html", "login.html"))
             print("Navigated to login page")
             time.sleep(2)
