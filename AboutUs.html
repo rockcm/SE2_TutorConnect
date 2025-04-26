@@ -139,13 +139,97 @@
 
   <!-- Top Navigation -->
   <header>
-    <div class="top-nav">
-      <span class="logo">App Name &amp; Logo</span>
-      <a href="#">Page1</a>
-      <a href="#">Page2</a>
-      <a href="#">Page3</a>
-      <a href="#">Page4</a>
-    </div>
+    <style>
+      /* NAVBAR WRAPPER */
+      .navbar {
+        display: flex;
+        align-items: center;
+        background-color: #efefef;
+        padding: 10px 20px;
+        border-bottom: 1px solid #ddd;
+        font-family: Arial, sans-serif;
+        height: 50px;
+        justify-content: space-between; /* Space out left, center, and right */
+      }
+  
+      /* LEFT SECTION: Page Links */
+      .nav-left a {
+        margin-right: 15px;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        
+
+      }
+      .nav-left a:hover {
+        color: #007bff;
+      }
+  
+      /* CENTER SECTION: Search Bar */
+      .nav-search {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1; /* Let the search bar expand in the center */
+      }
+      .nav-search input[type="text"] {
+        width: 200px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .search-btn {
+        margin-left: 5px;
+        padding: 5px;
+        border: none;
+        background-color: #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 50px;
+      }
+      .search-btn:hover {
+        background-color: #ccc;
+      }
+  
+      /* RIGHT SECTION: Small Login/Create Button */
+      .nav-right {
+        margin-left: 20px; /* Some spacing from center */
+      }
+      .login-btn {
+        padding: 2px 6px; /* Smaller button size */
+        font-size: 0.8rem;
+        border: none;
+        background-color: #4CAF50;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .login-btn:hover {
+        background-color: #45a049;
+      }
+    </style>
+  
+    <nav class="navbar">
+      <!-- LEFT: Page Links -->
+      <div class="nav-left" style="vertical-align: middle;">
+        <img src="../Media/tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
+        <a href="../index.html">Home</a>
+        <a href="../search.html">Search</a>
+        <a href="../AboutUs.html">About Us</a>
+        <a href="../Profiles/profile.html">Profile</a>
+      </div>
+  
+      <!-- CENTER: Search Bar -->
+      <div class="nav-search">
+        <input type="text" placeholder="Search..." />
+        <button class="search-btn">&#128270;</button>
+      </div>
+  
+      <!-- RIGHT: Login Button on the Far Right -->
+      <div class="nav-right">
+        <a href="login.html" class="login-btn">Login/Create</a>
+      </div>
+    </nav>
   </header>
 
   <!-- Banner -->
