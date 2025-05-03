@@ -74,18 +74,21 @@
     <header>
       <nav class="navbar">
         <!-- LEFT: Page Links -->
-        <div class="nav-left" style="vertical-align: middle;">
-          <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
-          <a href="index.html">Home</a>
-          <a href="#page2">Page2</a>
-          <a href="search.html">Search</a>
-          <a href="#page4">Page4</a>
-        </div>
+          <div class="nav-left" style="vertical-align: middle;">
+            <img src="tutor_connect.png" alt="Tutor logo" width="40" height="40"  style="border-radius:50px" >
+            <a href="/index.html">Home</a>
+            <a href="/AboutUs.html">About Us</a>
+            <a href="/search.html">Search</a>
+          </div>
     
         <!-- CENTER: Search Bar -->
         <div class="nav-search">
-          <input type="text" id="navSearchInput" placeholder="Search..." />
-          <button class="search-btn" onclick="goToSearch()">&#128270;</button>
+          <div class="search-container" style="position: relative; width: 100%;">
+            <input type="text" id="navSearchInput" placeholder="Search users..." autocomplete="off" />
+            <button class="search-btn" onclick="goToSearch()">&#128270;</button>
+            <!-- Dropdown results container -->
+            <div id="searchResults" class="search-results-dropdown" style="display: none;"></div>
+          </div>
         </div>
     
         <!-- RIGHT: Login/User Info based on auth state -->
@@ -93,8 +96,8 @@
           <!-- User greeting when logged in -->
           <span class="user-greeting" style="display: none;"></span>
           
-          <!-- Login button shown when not logged in -->
-          <a href="login.html" class="login-btn nav-login">Login/Create</a>
+          <!-- Login button shown when not logged in
+          <a href="login.html" class="login-btn nav-login">Login/Create</a> -->
           
           <!-- Profile link shown when logged in -->
           <a href="Profiles/profile.html" class="login-btn nav-profile" style="display: none;">My Profile</a>
@@ -154,6 +157,118 @@
     
     <!-- Navbar search functionality -->
     <script>
+      // Global variables
+      let searchTimeout;
+      const searchDelay = 300; // Milliseconds to wait after typing before searching
+      
+      // Initialize search functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('navSearchInput');
+        const searchResults = document.getElementById('searchResults');
+        
+        // Handle input in search box
+        searchInput.addEventListener('input', function() {
+          const query = this.value.trim();
+          
+          // Clear previous timeout
+          clearTimeout(searchTimeout);
+          
+          // Hide dropdown if query is empty
+          if (query === '') {
+            searchResults.style.display = 'none';
+            return;
+          }
+          
+          // Set a timeout to prevent too many requests while typing
+          searchTimeout = setTimeout(() => {
+            fetchSearchResults(query);
+          }, searchDelay);
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+          }
+        });
+        
+        // Allow Enter key to search
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            goToSearch();
+          }
+        });
+      });
+      
+      // Fetch search results from API
+      function fetchSearchResults(query) {
+        // Show loading state
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '<div class="search-result-item">Loading...</div>';
+        searchResults.style.display = 'block';
+        
+        // Make API request
+        fetch(`http://localhost:8000/users/search/json?search_term=${encodeURIComponent(query)}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(users => {
+            displaySearchResults(users);
+          })
+          .catch(error => {
+            console.error('Error fetching search results:', error);
+            searchResults.innerHTML = '<div class="search-no-results">Error fetching results</div>';
+          });
+      }
+      
+      // Display search results in dropdown
+      function displaySearchResults(users) {
+        const searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '';
+        
+        if (users.length === 0) {
+          searchResults.innerHTML = '<div class="search-no-results">No users found</div>';
+          return;
+        }
+        
+        // Limit to first 5 results for better UX
+        const displayUsers = users.slice(0, 5);
+        
+        displayUsers.forEach(user => {
+          const resultItem = document.createElement('div');
+          resultItem.className = 'search-result-item';
+          resultItem.innerHTML = `
+            <span class="user-name">${user.name}</span>
+            <span class="user-email">${user.email}</span>
+            <span class="user-role">${user.role}</span>
+          `;
+          
+          // Add click handler to go to profile or show details
+          resultItem.addEventListener('click', function() {
+            window.location.href = `Profiles/profile.html?user_id=${user.user_id}`;
+          });
+          
+          searchResults.appendChild(resultItem);
+        });
+        
+        // Add "View all results" option if more than 5 users
+        if (users.length > 5) {
+          const viewAllItem = document.createElement('div');
+          viewAllItem.className = 'search-result-item';
+          viewAllItem.innerHTML = `<strong>View all ${users.length} results</strong>`;
+          viewAllItem.addEventListener('click', function() {
+            goToSearch();
+          });
+          searchResults.appendChild(viewAllItem);
+        }
+        
+        searchResults.style.display = 'block';
+      }
+      
+      // Navigate to search page with current query
       function goToSearch() {
         const searchTerm = document.getElementById('navSearchInput').value;
         if (searchTerm.trim() !== '') {
@@ -162,15 +277,6 @@
           window.location.href = 'search.html';
         }
       }
-      
-      // Also allow pressing Enter to search
-      document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('navSearchInput').addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            goToSearch();
-          }
-        });
-      });
     </script>
 </body>
 </html>

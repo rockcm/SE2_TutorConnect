@@ -74,7 +74,7 @@ function logout() {
     updateUIBasedOnLoginState();
     
     // Redirect to login page
-    window.location.href = 'login.html';
+    window.location.href = '../login.html';
 }
 
 // Export functions for other scripts
