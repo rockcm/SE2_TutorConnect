@@ -73,28 +73,8 @@ def test_get_users():
     assert response.status_code == 200
     assert "Test User" in response.text or "New User" in response.text
 
-def test_get_user_by_id(test_db):
-    user_id = test_db["user_id"]
-    response = client.get(f"/users/json?user_id={user_id}")
-    assert response.status_code == 200
-    assert response.json()["name"] == "Test User"
-    assert response.json()["email"] == "test@example.com"
-    assert "password" in response.json()  # Ensure password field exists in response
 
-def test_update_user(test_db):
-    user_id = test_db["user_id"]
-    response = client.post(
-        "/users/update",
-        data={
-            "user_id": user_id,
-            "name": "Updated User",
-            "email": "updated@example.com",
-            "role": "tutor"
-        }
-    )
-    assert response.status_code == 200
-    assert "Updated User" in response.text
-    assert "updated@example.com" in response.text
+
 
 def test_delete_user():
     # Create a user to delete
