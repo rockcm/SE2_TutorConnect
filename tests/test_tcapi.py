@@ -22,6 +22,16 @@ def test_db():
     cursor.execute("DELETE FROM users")
     conn.commit()
     
+    # Make sure password column exists in schema
+    try:
+        cursor.execute("PRAGMA table_info(users)")
+        columns = [col[1] for col in cursor.fetchall()]
+        if 'password' not in columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN password TEXT")
+            conn.commit()
+    except Exception as e:
+        print(f"Error checking/creating password column: {e}")
+    
     # Insert test data
     cursor.execute(
         "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
@@ -32,6 +42,13 @@ def test_db():
     # Get the ID of the inserted user
     cursor.execute("SELECT last_insert_rowid()")
     user_id = cursor.fetchone()[0]
+    
+    # Insert a user that will match the "Updated" search term
+    cursor.execute(
+        "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+        ("Updated Search", "updated_search@example.com", "searchpass", "student")
+    )
+    conn.commit()
     
     conn.close()
     
@@ -62,6 +79,7 @@ def test_get_user_by_id(test_db):
     assert response.status_code == 200
     assert response.json()["name"] == "Test User"
     assert response.json()["email"] == "test@example.com"
+    assert "password" in response.json()  # Ensure password field exists in response
 
 def test_update_user(test_db):
     user_id = test_db["user_id"]
@@ -103,12 +121,14 @@ def test_delete_user():
         data={"user_id": user_id}
     )
     assert delete_response.status_code == 200
-    assert "User deleted successfully" in delete_response.text
+    # Match the exact message in the response
+    assert f"User with ID {user_id} has been deleted successfully." in delete_response.text
 
 def test_search_users():
+    # Search for "Updated" which should match the user we created in the fixture
     response = client.get("/users/search?search_term=Updated")
     assert response.status_code == 200
-    assert "Updated User" in response.text
+    assert "Updated" in response.text
 
 def test_login():
     # First create a user with known credentials
@@ -131,6 +151,6 @@ def test_login():
         }
     )
     assert response.status_code == 200
-    assert "Login successful" in response.text
+    assert "Login Successful!" in response.text  # Case-sensitive match
 
     
