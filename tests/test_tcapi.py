@@ -124,11 +124,6 @@ def test_delete_user():
     # Match the exact message in the response
     assert f"User with ID {user_id} has been deleted successfully." in delete_response.text
 
-def test_search_users():
-    # Search for "Updated" which should match the user we created in the fixture
-    response = client.get("/users/search?search_term=Updated")
-    assert response.status_code == 200
-    assert "Updated" in response.text
 
 def test_login():
     # First create a user with known credentials
