@@ -27,6 +27,28 @@ jobs:
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
 
-    - name: Run tests
+    - name: Create test database
       run: |
-        pytest #note
+        python -c "import sqlite3; conn = sqlite3.connect('test.db'); conn.execute('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, name TEXT, email TEXT, password TEXT, role TEXT)'); conn.commit(); conn.close()"
+
+    - name: Run unit tests
+      run: |
+        pytest
+
+    - name: Run API endpoint tests
+      run: |
+        # Test root endpoint
+        pytest tests/test_tcapi.py::test_read_root
+        
+        # User management endpoint tests
+        pytest tests/test_api_endpoints.py::test_create_user
+        pytest tests/test_api_endpoints.py::test_get_users
+        pytest tests/test_api_endpoints.py::test_get_user_by_id
+        pytest tests/test_api_endpoints.py::test_update_user
+        pytest tests/test_api_endpoints.py::test_delete_user
+        
+        # Search endpoint tests
+        pytest tests/test_api_endpoints.py::test_search_users
+        
+        # Authentication testsss
+        pytest tests/test_api_endpoints.py::test_login
