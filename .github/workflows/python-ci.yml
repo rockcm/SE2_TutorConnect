@@ -2,7 +2,7 @@ name: FastAPI CI for TCApi
 
 on:
   push:
-    branches: [ main ]
+    branches: [ RockC_CI ]
   pull_request:
     branches: [ main ]
 
